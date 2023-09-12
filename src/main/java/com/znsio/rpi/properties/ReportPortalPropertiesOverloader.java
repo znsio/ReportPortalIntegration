@@ -5,6 +5,7 @@ import com.znsio.rpi.utils.commandline.CommandLineResponse;
 import com.epam.reportportal.listeners.ListenerParameters;
 import com.epam.reportportal.utils.properties.PropertiesLoader;
 import com.epam.ta.reportportal.ws.model.attribute.ItemAttributesRQ;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.testng.util.Strings;
 import org.testng.xml.Parser;
@@ -108,14 +109,18 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static int getThreadCount() {
-        Parser parser = new Parser(System.getProperty("user.dir") + "/" + System.getProperty("suiteXmlFile"));
+        String xmlFilePath = System.getProperty("user.dir") + "/" + System.getProperty("suiteXmlFile");
+        Parser parser = new Parser(xmlFilePath);
         XmlSuite xmlSuite;
         try {
             xmlSuite = parser.parseToList().get(0);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (IOException ex) {
+            LOGGER.info("ERROR: Unable to find or load testng.xml file at location: "
+                    + xmlFilePath + "\n");
+            LOGGER.debug(ExceptionUtils.getStackTrace(ex));
+            throw new RuntimeException("ERROR: Unable to find or load testng.xml file at location: "
+                    + xmlFilePath + "\n", ex);
         }
-        LOGGER.info("xmlSuite.getParallel().toString()): " + xmlSuite.getParallel().toString());
         if ("none".equalsIgnoreCase(xmlSuite.getParallel().toString())) {
             return DEFAULT_THREAD_COUNT;
         }

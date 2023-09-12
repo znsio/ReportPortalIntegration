@@ -66,12 +66,12 @@ public class ScreenShotManager {
         return destinationFile;
     }
 
-    private static String normaliseScenarioName(String scenarioName) {
+    public static String normaliseScenarioName(String scenarioName) {
         return scenarioName.replaceAll("[`~ !@#$%^&*()\\-=+\\[\\]{}\\\\|;:'\",<.>/?]", "_")
                 .replaceAll("__", "_").replaceAll("__", "_");
     }
 
-    private static String getPrefix() {
+    public static String getPrefix() {
         return java.time.LocalDateTime.now().toString();
     }
 
