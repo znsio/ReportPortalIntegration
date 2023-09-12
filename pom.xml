@@ -6,9 +6,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.znsio</groupId>
-    <artifactId>report-portal-integration</artifactId>
+    <artifactId>ReportPortalIntegration</artifactId>
     <version>0.0.1</version>
-    <name>report-portal-integration</name>
+    <name>ReportPortalIntegration</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
