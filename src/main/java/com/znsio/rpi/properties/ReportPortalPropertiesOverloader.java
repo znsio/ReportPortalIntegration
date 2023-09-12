@@ -7,7 +7,10 @@ import com.epam.reportportal.utils.properties.PropertiesLoader;
 import com.epam.ta.reportportal.ws.model.attribute.ItemAttributesRQ;
 import org.apache.log4j.Logger;
 import org.testng.util.Strings;
+import org.testng.xml.Parser;
+import org.testng.xml.XmlSuite;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -22,6 +25,7 @@ public class ReportPortalPropertiesOverloader {
     private static final String WEB_AUTOMATION = "WebAutomation";
     private static final String APP_AUTOMATION = "AppAutomation";
     private static final Properties rpProperties = Config.loadProperties(System.getProperty("CONFIG"));
+    private static final int DEFAULT_THREAD_COUNT = 1;
 
     public static ListenerParameters getProperties() {
         setLaunchName();
@@ -66,6 +70,7 @@ public class ReportPortalPropertiesOverloader {
             addAttributes("MobilabEnabled", rpProperties.getProperty(Config.IS_MOBILAB));
         }
         addAttributes("VisualEnabled", rpProperties.getProperty(Config.IS_VISUAL));
+        addAttributes("ParalleCount", Integer.toString(getThreadCount()));
     }
 
     private static void setPipelineAttributes() {
@@ -100,6 +105,21 @@ public class ReportPortalPropertiesOverloader {
 
     private static boolean isPlatformWeb() {
         return rpProperties.getProperty(Config.PLATFORM).equalsIgnoreCase("Web");
+    }
+
+    private static int getThreadCount() {
+        Parser parser = new Parser(System.getProperty("user.dir") + "/" + System.getProperty("suiteXmlFile"));
+        XmlSuite xmlSuite;
+        try {
+            xmlSuite = parser.parseToList().get(0);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        LOGGER.info("xmlSuite.getParallel().toString()): " + xmlSuite.getParallel().toString());
+        if ("none".equalsIgnoreCase(xmlSuite.getParallel().toString())) {
+            return DEFAULT_THREAD_COUNT;
+        }
+        return xmlSuite.getThreadCount();
     }
 
     private static void addAttributes(String key, String value) {
