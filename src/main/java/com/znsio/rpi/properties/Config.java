@@ -10,14 +10,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-class Config {
-    static final String TARGET_ENVIRONMENT = "TARGET_ENVIRONMENT";
-    static final String PLATFORM = "PLATFORM";
-    static final String APP_NAME = "APP_NAME";
-    static final String IS_VISUAL = "IS_VISUAL";
-    static final String IS_MOBILAB = "IS_MOBILAB";
-    static final String BROWSER = "BROWSER";
-    static final String APP_PACKAGE_NAME = "APP_PACKAGE_NAME";
+public class Config {
+    public static final String TARGET_ENVIRONMENT = "TARGET_ENVIRONMENT";
+    public static final String PLATFORM = "PLATFORM";
+    public static final String APP_NAME = "APP_NAME";
+    public static final String IS_VISUAL = "IS_VISUAL";
+    public static final String IS_MOBILAB = "IS_MOBILAB";
+    public static final String BROWSER = "BROWSER";
+    public static final String APP_PACKAGE_NAME = "APP_PACKAGE_NAME";
+    public static final String URL = "URL";
+    public static final String APPLITOOLS_CONFIGURATION_FILE = "APPLITOOLS_CONFIGURATION_FILE";
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
 
     private Config() {
@@ -25,7 +27,7 @@ class Config {
     }
 
     @NotNull
-    static Properties loadProperties(String configFile) {
+    public static Properties loadProperties(String configFile) {
         final Properties properties;
         try (InputStream input = new FileInputStream(System.getProperty("user.dir") + File.separator + configFile)) {
             properties = new Properties();
