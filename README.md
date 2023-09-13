@@ -17,7 +17,7 @@
    ```
    <dependency>
       <groupId>com.github.znsio</groupId>
-      <artifactId>report-portal-integration</artifactId>
+      <artifactId>ReportPortalIntegration</artifactId>
       <version>x.x.x</version>
    </dependency>
    ```
