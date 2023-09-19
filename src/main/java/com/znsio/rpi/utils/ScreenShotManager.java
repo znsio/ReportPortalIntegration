@@ -43,7 +43,7 @@ public class ScreenShotManager {
         }
     }
 
-    public static File processScreenShot(WebDriver driver, String testName, String fileName) {
+    private static File processScreenShot(WebDriver driver, String testName, String fileName) {
         fileName = normaliseScenarioName(getPrefix() + "-" + fileName);
         File destinationFile;
         if (testName != null && !testName.isEmpty()) {
@@ -66,12 +66,12 @@ public class ScreenShotManager {
         return destinationFile;
     }
 
-    public static String normaliseScenarioName(String scenarioName) {
+    private static String normaliseScenarioName(String scenarioName) {
         return scenarioName.replaceAll("[`~ !@#$%^&*()\\-=+\\[\\]{}\\\\|;:'\",<.>/?]", "_")
                 .replaceAll("__", "_").replaceAll("__", "_");
     }
 
-    public static String getPrefix() {
+    private static String getPrefix() {
         return java.time.LocalDateTime.now().toString();
     }
 
