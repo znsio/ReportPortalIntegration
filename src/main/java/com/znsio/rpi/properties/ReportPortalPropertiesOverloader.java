@@ -25,7 +25,7 @@ public class ReportPortalPropertiesOverloader {
     private static final Logger LOGGER = Logger.getLogger(ReportPortalPropertiesOverloader.class.getName());
     private static final String WEB_AUTOMATION = "WebAutomation";
     private static final String APP_AUTOMATION = "AppAutomation";
-    private static final Properties rpProperties = Config.loadProperties(System.getProperty("CONFIG"));
+    private static final Properties config = Config.loadProperties(System.getProperty("CONFIG"));
     private static final int DEFAULT_THREAD_COUNT = 1;
 
     public static ListenerParameters getProperties() {
@@ -39,11 +39,11 @@ public class ReportPortalPropertiesOverloader {
 
     private static void setLaunchName() {
         if (isPlatformWeb()) {
-            parameters.setLaunchName(rpProperties.getProperty(Config.APP_NAME) + " - " + WEB_AUTOMATION + " - " +
-                    rpProperties.getProperty(Config.PLATFORM).toUpperCase());
+            parameters.setLaunchName(config.getProperty(Config.APP_NAME) + " - " + WEB_AUTOMATION + " - " +
+                    config.getProperty(Config.PLATFORM).toUpperCase());
         } else {
-            parameters.setLaunchName(rpProperties.getProperty(Config.APP_NAME) + " - " + APP_AUTOMATION + " - " +
-                    rpProperties.getProperty(Config.PLATFORM).toUpperCase());
+            parameters.setLaunchName(config.getProperty(Config.APP_NAME) + " - " + APP_AUTOMATION + " - " +
+                    config.getProperty(Config.PLATFORM).toUpperCase());
         }
     }
 
@@ -62,15 +62,15 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static void setTestAttributes() {
-        addAttributes("TargetEnvironment", rpProperties.getProperty(Config.TARGET_ENVIRONMENT));
-        addAttributes("Platform", rpProperties.getProperty(Config.PLATFORM).toUpperCase());
+        addAttributes("TargetEnvironment", config.getProperty(Config.TARGET_ENVIRONMENT));
+        addAttributes("Platform", config.getProperty(Config.PLATFORM).toUpperCase());
         if (isPlatformWeb()) {
-            addAttributes("Browser", rpProperties.getProperty(Config.BROWSER));
+            addAttributes("Browser", config.getProperty(Config.BROWSER));
         } else {
-            addAttributes("App", rpProperties.getProperty(Config.APP_PACKAGE_NAME));
-            addAttributes("MobilabEnabled", rpProperties.getProperty(Config.IS_MOBILAB));
+            addAttributes("App", config.getProperty(Config.APP_PACKAGE_NAME));
+            addAttributes("MobilabEnabled", config.getProperty(Config.IS_MOBILAB));
         }
-        addAttributes("VisualEnabled", rpProperties.getProperty(Config.IS_VISUAL));
+        addAttributes("VisualEnabled", config.getProperty(Config.IS_VISUAL));
         addAttributes("ParalleCount", Integer.toString(getThreadCount()));
     }
 
@@ -105,7 +105,7 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static boolean isPlatformWeb() {
-        return rpProperties.getProperty(Config.PLATFORM).equalsIgnoreCase("Web");
+        return config.getProperty(Config.PLATFORM).equalsIgnoreCase("Web");
     }
 
     private static int getThreadCount() {

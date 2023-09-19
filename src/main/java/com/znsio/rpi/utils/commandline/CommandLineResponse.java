@@ -34,4 +34,3 @@ public class CommandLineResponse {
         return "CommandLineResponse [exitCode=" + exitCode + ", stdOut=" + stdOut + ", errOut=" + errOut + "]";
     }
 }
-

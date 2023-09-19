@@ -19,12 +19,11 @@ public class Config {
     public static final String BROWSER = "BROWSER";
     public static final String APP_PACKAGE_NAME = "APP_PACKAGE_NAME";
     public static final String URL = "URL";
+    public static final String PAGE_LOAD_TIME = "PAGE_LOAD_TIME";
+    public static final String TEST_DATA_FILE = "TEST_DATA_FILE";
     public static final String APPLITOOLS_CONFIGURATION_FILE = "APPLITOOLS_CONFIGURATION_FILE";
+    public static final String TEST_REPORT_DIRECTORY = "TEST_REPORT_DIRECTORY";
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
-
-    private Config() {
-        LOGGER.debug("Setup - private constructor");
-    }
 
     @NotNull
     public static Properties loadProperties(String configFile) {
