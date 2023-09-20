@@ -15,7 +15,7 @@ public class Config {
     public static final String PLATFORM = "PLATFORM";
     public static final String APP_NAME = "APP_NAME";
     public static final String IS_VISUAL = "IS_VISUAL";
-    public static final String IS_MOBILAB = "IS_MOBILAB";
+    public static final String IS_LOCAL_DEVICE = "IS_LOCAL_DEVICE";
     public static final String BROWSER = "BROWSER";
     public static final String APP_PACKAGE_NAME = "APP_PACKAGE_NAME";
     public static final String URL = "URL";

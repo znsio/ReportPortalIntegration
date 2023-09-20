@@ -68,7 +68,7 @@ public class ReportPortalPropertiesOverloader {
             addAttributes("Browser", config.getProperty(Config.BROWSER));
         } else {
             addAttributes("App", config.getProperty(Config.APP_PACKAGE_NAME));
-            addAttributes("MobilabEnabled", config.getProperty(Config.IS_MOBILAB));
+            addAttributes("LocalDeviceExecution", config.getProperty(Config.IS_LOCAL_DEVICE));
         }
         addAttributes("VisualEnabled", config.getProperty(Config.IS_VISUAL));
         addAttributes("ParalleCount", Integer.toString(getThreadCount()));
