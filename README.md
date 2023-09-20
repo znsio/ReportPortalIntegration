@@ -1,7 +1,6 @@
 # Introduction
 1. Utility to easily integrate ReportPortal with your JAVA-TestNG automation framework
 2. This is a library which implements basic utilities for [ReportPortal](https://reportportal.io/docs/) `(com.epam.reportportal)`
-3. Dashboard link: http://reportportal.jio.com
 
 # Utilities
 1. `ReportPortalLogger`: For logging messages to ReportPortal at different levels like DEBUG, INFO WARN
