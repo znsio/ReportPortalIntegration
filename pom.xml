@@ -40,13 +40,6 @@
             <version>2.6</version>
         </dependency>
     </dependencies>
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main</directory>
-            </resource>
-        </resources>
-    </build>
     <repositories>
         <repository>
             <id>jitpack.io</id>
