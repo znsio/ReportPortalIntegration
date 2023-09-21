@@ -75,11 +75,11 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static void setPipelineAttributes() {
-        if (Strings.isNotNullAndNotEmpty(System.getenv("BUILD_BUILDID"))) {
+        if (Boolean.parseBoolean(config.getProperty((Config.RUN_IN_CI)))) {
             addAttributes("RunInCI", "true");
-            addAttributes("PipelineExecutionID", System.getenv("BUILD_BUILDID"));
-            addAttributes("AgentName", System.getenv("AGENT_NAME"));
-            addAttributes("AutomationBranch", System.getenv("BUILD_SOURCEBRANCHNAME"));
+            addAttributes("PipelineExecutionID", System.getenv(config.getProperty(Config.PIPELINE_EXECUTION_ID)));
+            addAttributes("AgentName", System.getenv(config.getProperty(Config.AGENT_NAME)));
+            addAttributes("AutomationBranch", System.getenv(config.getProperty(Config.BRANCH_NAME)));
         } else {
             addAttributes("RunInCI", "false");
             addAttributes("AutomationBranch", getBranchNameUsingGitCommand());
