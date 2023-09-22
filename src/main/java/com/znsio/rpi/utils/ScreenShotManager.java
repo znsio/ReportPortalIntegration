@@ -17,30 +17,10 @@ public class ScreenShotManager {
             "TestReport/Screenshots";
     private static final Logger LOGGER = Logger.getLogger(ScreenShotManager.class.getSimpleName());
 
-    public static String captureScreenShot(WebDriver webDriver) {
-        String testName = Thread.currentThread().getStackTrace()[3].getMethodName();
-        String fileName = Thread.currentThread().getStackTrace()[2].getMethodName();
-        File destinationFile = processScreenShot(webDriver, testName, fileName);
-        attachScreenshotInReportPortal(fileName, destinationFile);
-        return destinationFile.getAbsolutePath();
-    }
-    public static String captureScreenShot(WebDriver webDriver, String message) {
-        String testName = Thread.currentThread().getStackTrace()[3].getMethodName();
-        String fileName = Thread.currentThread().getStackTrace()[2].getMethodName();
-        String logMessage = fileName + ": " + message;
-        File destinationFile = processScreenShot(webDriver, testName, fileName);
-        attachScreenshotInReportPortal(logMessage, destinationFile);
-        return destinationFile.getAbsolutePath();
-    }
-    private static void attachScreenshotInReportPortal(String logMessage, File destinationFile){
-        try {
-            ReportPortalLogger.attachFileInReportPortal(logMessage, destinationFile);
-        } catch (RuntimeException e) {
-            LOGGER.info(
-                    "ERROR: Unable to upload screenshot: '" + destinationFile.getAbsolutePath() +
-                            "' to ReportPortal\n");
-            LOGGER.debug(ExceptionUtils.getStackTrace(e));
-        }
+    public static File captureScreenShot(WebDriver webDriver) {
+        String testName = Thread.currentThread().getStackTrace()[4].getMethodName();
+        String fileName = Thread.currentThread().getStackTrace()[3].getMethodName();
+        return processScreenShot(webDriver, testName, fileName);
     }
 
     private static File processScreenShot(WebDriver driver, String testName, String fileName) {
