@@ -73,7 +73,7 @@ public class ReportPortalPropertiesOverloader {
             addAttributes("LocalDeviceExecution", config.getProperty(Config.IS_LOCAL_DEVICE));
         }
         addAttributes("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL,
-                config.getProperty(Config.IS_VISUAL, NOT_SET)));
+                config.getProperty(Config.IS_VISUAL, "false")));
         addAttributes("ParallelCount", Integer.toString(getThreadCount()));
     }
 
@@ -85,7 +85,7 @@ public class ReportPortalPropertiesOverloader {
             addAttributes("AgentName", getOverriddenStringValue(Config.AGENT_NAME,
                     getOverriddenStringValue(config.getProperty(Config.AGENT_NAME), NOT_SET)));
             addAttributes("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
-                    getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), NOT_SET)));
+                    getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
         } else {
             addAttributes("RunInCI", "false");
             addAttributes("AutomationBranch", getBranchNameUsingGitCommand());

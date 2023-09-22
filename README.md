@@ -106,7 +106,7 @@
    AGENT_NAME
    BRANCH_NAME
    ```
-   All these attributes will be set as launch attributes if the execution is happening on CI, and they are either set at
+   All these attributes will be set as launch attributes if the execution is happening on CI, and if they are either set at
    System property or System environment variable. If your pipeline is using different keys to set the above attributes
    then the ones we're using above, for each such key, you can define the new key value in the `config.proprties` file
    of your automation framework like below:
