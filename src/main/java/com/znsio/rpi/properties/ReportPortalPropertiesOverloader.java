@@ -14,10 +14,9 @@ import org.testng.xml.XmlSuite;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
+
+import static com.znsio.rpi.utils.OverriddenVariable.getOverriddenStringValue;
 
 public class ReportPortalPropertiesOverloader {
     private static ListenerParameters parameters = new ListenerParameters(PropertiesLoader.load());
@@ -25,6 +24,8 @@ public class ReportPortalPropertiesOverloader {
     private static final Logger LOGGER = Logger.getLogger(ReportPortalPropertiesOverloader.class.getName());
     private static final String WEB_AUTOMATION = "WebAutomation";
     private static final String APP_AUTOMATION = "AppAutomation";
+    private static final String NOT_SET = "not-set";
+    private static final String RP_PREFIX = "RP_";
     private static final Properties config = Config.loadProperties(System.getProperty("CONFIG"));
     private static final int DEFAULT_THREAD_COUNT = 1;
 
@@ -33,6 +34,7 @@ public class ReportPortalPropertiesOverloader {
         setSystemAttributes();
         setTestAttributes();
         setPipelineAttributes();
+        setRPAttributesFromSystemVariables();
         parameters.setAttributes(itemAttributesRQSet);
         return parameters;
     }
@@ -70,16 +72,20 @@ public class ReportPortalPropertiesOverloader {
             addAttributes("App", config.getProperty(Config.APP_PACKAGE_NAME));
             addAttributes("LocalDeviceExecution", config.getProperty(Config.IS_LOCAL_DEVICE));
         }
-        addAttributes("VisualEnabled", config.getProperty(Config.IS_VISUAL));
-        addAttributes("ParalleCount", Integer.toString(getThreadCount()));
+        addAttributes("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL,
+                config.getProperty(Config.IS_VISUAL, NOT_SET)));
+        addAttributes("ParallelCount", Integer.toString(getThreadCount()));
     }
 
     private static void setPipelineAttributes() {
-        if (Boolean.parseBoolean(config.getProperty((Config.RUN_IN_CI)))) {
+        if (Boolean.parseBoolean(getOverriddenStringValue(Config.RUN_IN_CI, config.getProperty(Config.RUN_IN_CI)))) {
             addAttributes("RunInCI", "true");
-            addAttributes("PipelineExecutionID", System.getenv(config.getProperty(Config.PIPELINE_EXECUTION_ID)));
-            addAttributes("AgentName", System.getenv(config.getProperty(Config.AGENT_NAME)));
-            addAttributes("AutomationBranch", System.getenv(config.getProperty(Config.BRANCH_NAME)));
+            addAttributes("PipelineExecutionID", getOverriddenStringValue(Config.BUILD_ID,
+                    getOverriddenStringValue(config.getProperty(Config.BUILD_ID), NOT_SET)));
+            addAttributes("AgentName", getOverriddenStringValue(Config.AGENT_NAME,
+                    getOverriddenStringValue(config.getProperty(Config.AGENT_NAME), NOT_SET)));
+            addAttributes("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
+                    getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), NOT_SET)));
         } else {
             addAttributes("RunInCI", "false");
             addAttributes("AutomationBranch", getBranchNameUsingGitCommand());
@@ -125,6 +131,34 @@ public class ReportPortalPropertiesOverloader {
             return DEFAULT_THREAD_COUNT;
         }
         return xmlSuite.getThreadCount();
+    }
+
+    private static void setRPAttributesFromSystemVariables() {
+        setRPAttributesFromEnvVariables();
+        setRPAttributesFromSystemProperties();
+    }
+
+    private static void setRPAttributesFromSystemProperties() {
+        Properties properties = System.getProperties();
+        Set<String> set = properties.stringPropertyNames();
+        for (String propkey : set) {
+            if (propkey.startsWith(RP_PREFIX)) {
+                addAttributes(getKeyWithoutPrefix(RP_PREFIX, propkey), properties.getProperty(propkey));
+            }
+        }
+    }
+
+    private static void setRPAttributesFromEnvVariables() {
+        Map<String, String> map = System.getenv();
+        for (String envKey : map.keySet()) {
+            if (envKey.startsWith(RP_PREFIX)) {
+                addAttributes(getKeyWithoutPrefix(RP_PREFIX, envKey), map.get(envKey));
+            }
+        }
+    }
+
+    private static String getKeyWithoutPrefix(String prefix, String key) {
+        return key.substring(prefix.length());
     }
 
     private static void addAttributes(String key, String value) {

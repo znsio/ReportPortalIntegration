@@ -19,7 +19,7 @@ public class Config {
     public static final String BROWSER = "BROWSER";
     public static final String APP_PACKAGE_NAME = "APP_PACKAGE_NAME";
     public static final String RUN_IN_CI = "RUN_IN_CI";
-    public static final String PIPELINE_EXECUTION_ID = "PIPELINE_EXECUTION_ID";
+    public static final String BUILD_ID = "BUILD_ID";
     public static final String AGENT_NAME = "AGENT_NAME";
     public static final String BRANCH_NAME = "BRANCH_NAME";
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
