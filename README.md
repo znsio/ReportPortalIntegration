@@ -20,6 +20,7 @@
 > If facing issues with dependencies not being resolved from https://jitpack.io, then check the `settings.xml` file
 > you're using for building your maven projects. If you've proxies configured in the same, then make sure `jitpack.io`
 > is part of `nonProxyHosts` configuration. For instance
+
 ```xml
 
 <proxy>
@@ -95,10 +96,7 @@
    rp.launch = <Your Launch Name>
    rp.project = <Your Project Name>
    ```
-3. **ReportPortal Attributes and Properties Overlaoding:** Use the `ReportPortalPropertiesOverloader` class defined
-   under `src/main/java/com/znsio/rpi/properties` path to change any attributes/property value for ReportPortal at
-   runtime
-4. **Launch attributes related to CI (Pipeline) execution**: The `setPipelineAttributes` method
+3. **Launch attributes related to CI (Pipeline) execution**: The `setPipelineAttributes` method
    of `ReportPortalPropertiesOverloader` class takes care of setting the following attributes in case the test execution
    is happening on CI (Pipeline)
    ```
@@ -106,7 +104,8 @@
    AGENT_NAME
    BRANCH_NAME
    ```
-   All these attributes will be set as launch attributes if the execution is happening on CI, and if they are either set at
+   All these attributes will be set as launch attributes if the execution is happening on CI, and if they are either set
+   at
    System property or System environment variable. If your pipeline is using different keys to set the above attributes
    then the ones we're using above, for each such key, you can define the new key value in the `config.proprties` file
    of your automation framework like below:
@@ -114,7 +113,7 @@
    BUILD_ID=BUILD_BUILDID
    BRANCH_NAME=BUILD_SOURCEBRANCHNAME
    ```
-5. For more details on configuration and additional parameters for `reportportal.properties`,
+4. For more details on configuration and additional parameters for `reportportal.properties`,
    refer [reportportal-client-java](https://github.com/reportportal/client-java)
    and [reportportal-agent-java-testNG](https://github.com/reportportal/agent-java-testNG)
 
@@ -122,9 +121,9 @@
 
 1. `ReportPortalPropertiesOverloader` class takes care of dynamically setting Report Portal properties at run time like
    launch name, description, attributes etc
-    1. Use `parameters.setLaunchName(<LaunchName>)` to set launch name
-    2. Use `parameters.setDescription(<LaunchDescription>)` to set launch description
-    3. Use `addAttributes(<Key>, <Value>)` to set any launch attribute. For instance,
+    1. `parameters.setLaunchName(<LaunchName>)` to set launch name
+    2. `parameters.setDescription(<LaunchDescription>)` to set launch description
+    3. `addAttributes(<Key>, <Value>)` to set any launch attribute. For instance,
        `addAttributes("OS", System.getProperty("os.name"));`
     4. **Dynamic properties:** For setting any additional property to launch attributes which is not already configured
        in `ReportPortalPropertiesOverloader` class, set that attribute key and value at either System Property level or
