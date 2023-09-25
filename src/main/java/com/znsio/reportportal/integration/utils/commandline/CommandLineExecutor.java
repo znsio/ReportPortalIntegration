@@ -1,4 +1,4 @@
-package com.znsio.rpi.utils.commandline;
+package com.znsio.reportportal.integration.utils.commandline;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;

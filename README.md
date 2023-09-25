@@ -56,7 +56,7 @@
            ```
         2. **With overloading properties**
            ```
-           <listener class-name="com.znsio.rpi.listener.ReportPortalListener"/>
+           <listener class-name="com.znsio.integration.listener.ReportPortalListener"/>
            ```
     2. **Approach-2 Listener in Maven Surefire Plugin:** Add the following snippet to configure ReportPortal listener in
        the `pom.xml` file where you have configured your `maven-surefire-plugin`
@@ -71,7 +71,7 @@
            ```
            <property>
               <name>listener</name>
-              <value>com.znsio.rpi.listener.ReportPortalListener</value>
+              <value>com.znsio.integration.listener.ReportPortalListener</value>
            </property>
            ```
     2. **Approach-3:** Use the following snippet to configure ReportPortal listener when creating TestNG file

@@ -1,7 +1,7 @@
-package com.znsio.rpi.properties;
+package com.znsio.reportportal.integration.properties;
 
-import com.znsio.rpi.utils.commandline.CommandLineExecutor;
-import com.znsio.rpi.utils.commandline.CommandLineResponse;
+import com.znsio.reportportal.integration.utils.commandline.CommandLineResponse;
+import com.znsio.reportportal.integration.utils.commandline.CommandLineExecutor;
 import com.epam.reportportal.listeners.ListenerParameters;
 import com.epam.reportportal.utils.properties.PropertiesLoader;
 import com.epam.ta.reportportal.ws.model.attribute.ItemAttributesRQ;
@@ -16,7 +16,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
-import static com.znsio.rpi.utils.OverriddenVariable.getOverriddenStringValue;
+import static com.znsio.reportportal.integration.utils.OverriddenVariable.getOverriddenStringValue;
 
 public class ReportPortalPropertiesOverloader {
     private static ListenerParameters parameters = new ListenerParameters(PropertiesLoader.load());

@@ -1,4 +1,4 @@
-package com.znsio.rpi.utils;
+package com.znsio.reportportal.integration.utils;
 
 import com.epam.reportportal.listeners.ListenerParameters;
 import com.epam.reportportal.service.Launch;

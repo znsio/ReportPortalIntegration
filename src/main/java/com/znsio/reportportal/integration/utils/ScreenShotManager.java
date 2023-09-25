@@ -1,4 +1,4 @@
-package com.znsio.rpi.utils;
+package com.znsio.reportportal.integration.utils;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;

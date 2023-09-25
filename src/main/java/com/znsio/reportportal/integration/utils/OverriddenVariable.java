@@ -1,4 +1,4 @@
-package com.znsio.rpi.utils;
+package com.znsio.reportportal.integration.utils;
 
 public class OverriddenVariable {
 

@@ -1,4 +1,4 @@
-package com.znsio.rpi.utils;
+package com.znsio.reportportal.integration.utils;
 
 import com.epam.reportportal.service.ReportPortal;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -8,7 +8,7 @@ import org.openqa.selenium.WebDriver;
 import java.io.File;
 import java.util.Date;
 
-import static com.znsio.rpi.utils.ScreenShotManager.captureScreenShot;
+import static com.znsio.reportportal.integration.utils.ScreenShotManager.captureScreenShot;
 
 public class ReportPortalLogger {
     private static final Logger LOGGER = Logger.getLogger(ReportPortalLogger.class.getSimpleName());

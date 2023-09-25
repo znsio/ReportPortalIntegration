@@ -1,4 +1,4 @@
-package com.znsio.rpi.utils.commandline;
+package com.znsio.reportportal.integration.utils.commandline;
 
 public class CommandLineResponse {
     private int exitCode;

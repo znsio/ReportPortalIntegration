@@ -1,8 +1,8 @@
-package com.znsio.rpi.listener;
+package com.znsio.reportportal.integration.listener;
 
-import com.znsio.rpi.utils.ParamOverrideTestNgService;
+import com.znsio.reportportal.integration.utils.ParamOverrideTestNgService;
 import com.epam.reportportal.testng.BaseTestNGListener;
-import com.znsio.rpi.properties.ReportPortalPropertiesOverloader;
+import com.znsio.reportportal.integration.properties.ReportPortalPropertiesOverloader;
 
 public class ReportPortalListener extends BaseTestNGListener {
     public ReportPortalListener() {
