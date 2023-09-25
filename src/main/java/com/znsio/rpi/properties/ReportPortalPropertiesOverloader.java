@@ -75,6 +75,8 @@ public class ReportPortalPropertiesOverloader {
         addAttributes("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL,
                 config.getProperty(Config.IS_VISUAL, "false")));
         addAttributes("ParallelCount", Integer.toString(getThreadCount()));
+        addAttributes("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
+                getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
     }
 
     private static void setPipelineAttributes() {
@@ -84,11 +86,8 @@ public class ReportPortalPropertiesOverloader {
                     getOverriddenStringValue(config.getProperty(Config.BUILD_ID), NOT_SET)));
             addAttributes("AgentName", getOverriddenStringValue(Config.AGENT_NAME,
                     getOverriddenStringValue(config.getProperty(Config.AGENT_NAME), NOT_SET)));
-            addAttributes("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
-                    getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
         } else {
             addAttributes("RunInCI", "false");
-            addAttributes("AutomationBranch", getBranchNameUsingGitCommand());
         }
     }
 
@@ -143,7 +142,7 @@ public class ReportPortalPropertiesOverloader {
         Set<String> set = properties.stringPropertyNames();
         for (String propkey : set) {
             if (propkey.startsWith(RP_PREFIX)) {
-                addAttributes(getKeyWithoutPrefix(RP_PREFIX, propkey), properties.getProperty(propkey));
+                addAttributes(getKeyWithoutPrefix(propkey), properties.getProperty(propkey));
             }
         }
     }
@@ -152,13 +151,13 @@ public class ReportPortalPropertiesOverloader {
         Map<String, String> map = System.getenv();
         for (String envKey : map.keySet()) {
             if (envKey.startsWith(RP_PREFIX)) {
-                addAttributes(getKeyWithoutPrefix(RP_PREFIX, envKey), map.get(envKey));
+                addAttributes(getKeyWithoutPrefix(envKey), map.get(envKey));
             }
         }
     }
 
-    private static String getKeyWithoutPrefix(String prefix, String key) {
-        return key.substring(prefix.length());
+    private static String getKeyWithoutPrefix(String key) {
+        return key.substring(RP_PREFIX.length());
     }
 
     private static void addAttributes(String key, String value) {
