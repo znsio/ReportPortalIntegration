@@ -92,6 +92,7 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static String getBranchNameUsingGitCommand() {
+        //TODO: This currently works only for Mac/Linux. Need to update to make it work for Windows as well
         String[] getBranchNameCommand = new String[]{"git", "rev-parse", "--abbrev-ref", "HEAD"};
         CommandLineResponse response = CommandLineExecutor.execCommand(getBranchNameCommand);
         String branchName = response.getStdOut();
@@ -101,6 +102,7 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static String getBrowserVersion(String browserPath) {
+        //TODO: This currently works only for Mac/Linux. Need to update to make it work for Windows as well
         String[] getBrowserVersionCommand = new String[]{browserPath, "-v", "|", "awk", "'{print $2}'"};
         CommandLineResponse response = CommandLineExecutor.execCommand(getBrowserVersionCommand);
         String BrowserVersion = response.getStdOut();
