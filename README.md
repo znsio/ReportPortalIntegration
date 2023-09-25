@@ -146,9 +146,9 @@
        ReportPortal along with the screenshot
     6. `ReportPortalLogger.attachFileInReportPortal(String message, File file)`: Logs `message` and attaches `file` at
        INFO level to `ReportPortal`
-2. `ScreenShotManager` class has all its public methods defined as static, so it doesn't require the consumer to create
-   an object of this class. Following are the methods we can use to capture screenshots. This class creates the
-   following directory under your project directory "TestReport/Screenshots" where the screenshots will be saved
+2. `ScreenShotManager` class has all methods as private except one (captureScreenShot) .Following are the methods we can
+   use to capture screenshots. This class creates the following directory under your project directory "
+   TestReport/Screenshots" where the screenshots will be saved
     1. `ScreenShotManager.captureScreenShot(WebDriver webDriver)`: This method will take the calling step as its
        fileName, and its parent as the testName. It will then call `processScreenShot()` method to capture, descale and
        save the screenshot. The method returns a File object where the captured file is stored.
