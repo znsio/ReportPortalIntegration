@@ -120,19 +120,16 @@
 # How to use the ReportPortal utilities
 
 1. `ReportPortalPropertiesOverloader` class takes care of dynamically setting Report Portal properties at run time like
-   launch name, description, attributes etc
-    1. `parameters.setLaunchName(<LaunchName>)` to set launch name
-    2. `parameters.setDescription(<LaunchDescription>)` to set launch description
-    3. `addAttributes(<Key>, <Value>)` to set any launch attribute. For instance,
-       `addAttributes("OS", System.getProperty("os.name"));`
-    4. **Dynamic properties:** For setting any additional property to launch attributes which is not already configured
-       in `ReportPortalPropertiesOverloader` class, set that attribute key and value at either System Property level or
-       at Environment variable. Any key with prefix `RP_` set at System property or Environment variable level will be
-       set as ReportPortal's launch attribute. The method which takes care of this configuration
-       is `setRPAttributesFromSystemVariables` defined inside `ReportPortalPropertiesOverloader` class.
-       For instance, if you're setting environment variable like `export RP_Version=0.0.1`, then on ReportPortal, you'll
-       see the corresponding launch attribute as `Version:0.0.1`
-2. `ReportPortalLogger` class has all its public methods defined as static, so it doesn't require the consumer to create
+   launch name, description, attributes etc. The method which takes care of this is `getProperties()` which is
+   automatically invoked from `ReportPortalListener` class as part of listener initialization
+2. **Dynamic properties:** For setting any additional property to launch attributes which is not already configured
+   in `ReportPortalPropertiesOverloader` class, we need to set that attribute key and value at either System Property
+   level or at Environment variable. Any key with prefix `RP_` set at System property or Environment variable level will
+   be set as ReportPortal's launch attribute. The method which takes care of this configuration
+   is `setRPAttributesFromSystemVariables` defined inside `ReportPortalPropertiesOverloader` class.
+   For instance, if you're setting environment variable like `export RP_Version=0.0.1`, then on ReportPortal, you'll
+   see the corresponding launch attribute as `Version:0.0.1`
+3. `ReportPortalLogger` class has all its public methods defined as static, so it doesn't require the consumer to create
    an object of this class. Following are the methods we can use to report logs to ReportPortal
     1. `ReportPortalLogger.logInfoMessage(String message)`: Logs `message` at INFO level to `ReportPortal` as well as
        console
@@ -152,14 +149,6 @@
     1. `ScreenShotManager.captureScreenShot(WebDriver webDriver)`: This method will take the calling step as its
        fileName, and its parent as the testName. It will then call `processScreenShot()` method to capture, descale and
        save the screenshot. The method returns a File object where the captured file is stored.
-    2. `ScreenShotManager.processScreenShot(WebDriver driver, String testName, String fileName)`: This method performs
-       the following operations:
-        1. Captures the screenshot using Selenium `TakesScreenshot` utility
-        2. Reduce the screenshot file size by converting the png file to jpg file
-        3. Assign the screenshot file name with this format "<CurrentTimeStamp>_<fileName>.jpg"
-        4. Creates a `testName` directory under the "TestReport/Screenshots" and will save the screenshot here. If
-           the `testName` value is null or empty, the screenshot will be saved directly under "TestReport/Screenshots"
-           directory
 3. `CommandLineExecutor` class has all its public methods defined as static, so it doesn't require the consumer to
    create an object of this class. Following are the methods we can use to run CLI commands using Java
     1. `CommandLineExecutor.execCommand(final String[] command)`: Run the command passed in the parameter value and
