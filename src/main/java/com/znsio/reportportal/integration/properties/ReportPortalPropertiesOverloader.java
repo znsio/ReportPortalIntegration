@@ -5,11 +5,11 @@ import com.znsio.reportportal.integration.utils.commandline.CommandLineExecutor;
 import com.epam.reportportal.listeners.ListenerParameters;
 import com.epam.reportportal.utils.properties.PropertiesLoader;
 import com.epam.ta.reportportal.ws.model.attribute.ItemAttributesRQ;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.testng.util.Strings;
-import org.testng.xml.Parser;
 import org.testng.xml.XmlSuite;
+import org.testng.xml.internal.Parser;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -53,7 +53,7 @@ public class ReportPortalPropertiesOverloader {
         addAttributes("OS", System.getProperty("os.name"));
         addAttributes("Username", System.getProperty("user.name"));
         try {
-            if (Strings.isNotNullAndNotEmpty(InetAddress.getLocalHost().getHostName())) {
+            if (StringUtils.isNotEmpty(InetAddress.getLocalHost().getHostName())) {
                 String hostName = InetAddress.getLocalHost().getHostName();
                 addAttributes("HostName", hostName);
             }
@@ -163,7 +163,7 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static void addAttributes(String key, String value) {
-        if (Strings.isNotNullAndNotEmpty(key) && Strings.isNotNullAndNotEmpty(value)) {
+        if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(value)) {
             itemAttributesRQSet.add(new ItemAttributesRQ(key, value));
         }
     }

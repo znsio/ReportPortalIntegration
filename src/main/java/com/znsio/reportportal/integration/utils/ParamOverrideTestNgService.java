@@ -5,10 +5,10 @@ import com.epam.reportportal.service.Launch;
 import com.epam.reportportal.service.ReportPortal;
 import com.epam.reportportal.testng.TestNGService;
 import com.epam.ta.reportportal.ws.model.launch.StartLaunchRQ;
-import rp.com.google.common.base.Strings;
-import rp.com.google.common.base.Supplier;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Calendar;
+import java.util.function.Supplier;
 
 public class ParamOverrideTestNgService extends TestNGService {
     public ParamOverrideTestNgService(ListenerParameters parameters) {
@@ -32,7 +32,7 @@ public class ParamOverrideTestNgService extends TestNGService {
         rq.setStartTime(Calendar.getInstance().getTime());
         rq.setAttributes(parameters.getAttributes());
         rq.setMode(parameters.getLaunchRunningMode());
-        if (!Strings.isNullOrEmpty(parameters.getDescription())) {
+        if (!StringUtils.isNotEmpty(parameters.getDescription())) {
             rq.setDescription(parameters.getDescription());
         }
         return rq;
