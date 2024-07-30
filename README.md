@@ -122,13 +122,28 @@
 1. `ReportPortalPropertiesOverloader` class takes care of dynamically setting Report Portal properties at run time like
    launch name, description, attributes etc. The method which takes care of this is `getProperties()` which is
    automatically invoked from `ReportPortalListener` class as part of listener initialization
-2. **Dynamic properties:** For setting any additional property to launch attributes which is not already configured
-   in `ReportPortalPropertiesOverloader` class, we need to set that attribute key and value at either System Property
-   level or at Environment variable. Any key with prefix `RP_` set at System property or Environment variable level will
-   be set as ReportPortal's launch attribute. The method which takes care of this configuration
-   is `setRPAttributesFromSystemVariables` defined inside `ReportPortalPropertiesOverloader` class.
-   For instance, if you're setting environment variable like `export RP_Version=0.0.1`, then on ReportPortal, you'll
-   see the corresponding launch attribute as `Version:0.0.1`
+2. **Configuring the test metadata:** 
+
+   1. The following property values are mandatory to be provided for capturing the relevant test execution metadata. You can provide them in the reportportal.properties file, or add a System property *RP_CONFIG* with the relative path from project root directory (user.dir) where this file exists.
+      * APP_NAME=[application_name]
+      * TARGET_ENVIRONMENT=[dev/qa/preprod/prod]
+      * PLATFORM=[web/android/ios/desktop/api/etc.]
+      * BROWSER=[if Platform==web, which browser is used for test execution - chrome/firefox/na]
+      * APP_PACKAGE_NAME=[if Platform==android/ios, the package name]
+      * IS_LOCAL_DEVICE=[true/false] - is the test running on local browser/device or cloud
+      * IS_VISUAL=[true/false] - if Visual testing is enabled or not
+      * BRANCH_NAME=[the current branch name as obtained by git command, or can be specified as an absolute value, or the environment varaiable/system property name which indicates the branch name]
+      * RUN_IN_CI=[true/false] - if test is running in CI or not
+      * BUILD_ID=[the environment variable or system property name which indicates the build id]
+      * AGENT_NAME=[the environment variable or system property name which indicates the CI agent name]
+   2. For setting any additional property to launch attributes which is not already configured
+      in `ReportPortalPropertiesOverloader` class, we need to set that attribute key and value at either System Property
+      level or at Environment variable. Any key with prefix `RP_` set at System property or Environment variable level will
+      be set as ReportPortal's launch attribute. The method which takes care of this configuration
+      is `setRPAttributesFromSystemVariables` defined inside `ReportPortalPropertiesOverloader` class.
+      For instance, if you're setting environment variable like `export RP_Version=0.0.1`, then on ReportPortal, you'll
+      see the corresponding launch attribute as `Version:0.0.1`
+
 3. `ReportPortalLogger` class has all its public methods defined as static, so it doesn't require the consumer to create
    an object of this class. Following are the methods we can use to report logs to ReportPortal
     1. `ReportPortalLogger.logInfoMessage(String message)`: Logs `message` at INFO level to `ReportPortal` as well as

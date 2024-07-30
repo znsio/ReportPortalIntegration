@@ -26,17 +26,26 @@ public class Config {
 
     @NotNull
     public static Properties loadProperties(String configFile) {
-        final Properties properties;
-        try (InputStream input = new FileInputStream(System.getProperty("user.dir") + File.separator + configFile)) {
-            properties = new Properties();
-            properties.load(input);
-        } catch (IOException ex) {
-            LOGGER.info("ERROR: Config file not found, or unable to read it: "
-                    + configFile + "\n");
-            LOGGER.debug(ExceptionUtils.getStackTrace(ex));
-            throw new RuntimeException("ERROR: Config file not found, or unable to read it: "
-                    + configFile + "\n", ex);
+        if (null == configFile) {
+            configFile = "src/test/resources/reportportal.properties";
         }
-        return properties;
+        String configFilePath = System.getProperty("user.dir") + File.separator + configFile;
+        if (new File(configFilePath).exists()) {
+            LOGGER.info("Using config file: " + configFilePath);
+            final Properties properties;
+            try (InputStream input = new FileInputStream(configFilePath)) {
+                properties = new Properties();
+                properties.load(input);
+            } catch (IOException ex) {
+                LOGGER.info("ERROR: Config file not found, or unable to read it: "
+                            + configFile + "\n");
+                LOGGER.debug(ExceptionUtils.getStackTrace(ex));
+                throw new RuntimeException("ERROR: Config file not found, or unable to read it: "
+                                           + configFile + "\n", ex);
+            }
+            return properties;
+        } else {
+            throw new RuntimeException("ERROR: Config file not found: " + configFile + "\n");
+        }
     }
 }

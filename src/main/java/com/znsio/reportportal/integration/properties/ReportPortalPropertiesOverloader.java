@@ -1,17 +1,13 @@
 package com.znsio.reportportal.integration.properties;
 
-import com.znsio.reportportal.integration.utils.commandline.CommandLineResponse;
-import com.znsio.reportportal.integration.utils.commandline.CommandLineExecutor;
 import com.epam.reportportal.listeners.ListenerParameters;
 import com.epam.reportportal.utils.properties.PropertiesLoader;
 import com.epam.ta.reportportal.ws.model.attribute.ItemAttributesRQ;
+import com.znsio.reportportal.integration.utils.commandline.CommandLineExecutor;
+import com.znsio.reportportal.integration.utils.commandline.CommandLineResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
-import org.testng.xml.XmlSuite;
-import org.testng.xml.internal.Parser;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -26,8 +22,7 @@ public class ReportPortalPropertiesOverloader {
     private static final String APP_AUTOMATION = "AppAutomation";
     private static final String NOT_SET = "not-set";
     private static final String RP_PREFIX = "RP_";
-    private static final Properties config = Config.loadProperties(System.getProperty("CONFIG"));
-    private static final int DEFAULT_THREAD_COUNT = 1;
+    private static final Properties config = Config.loadProperties(System.getProperty("RP_CONFIG"));
 
     public static ListenerParameters getProperties() {
         setLaunchName();
@@ -74,7 +69,6 @@ public class ReportPortalPropertiesOverloader {
         }
         addAttributes("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL,
                 config.getProperty(Config.IS_VISUAL, "false")));
-        addAttributes("ParallelCount", Integer.toString(getThreadCount()));
         addAttributes("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
                 getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
     }
@@ -113,25 +107,6 @@ public class ReportPortalPropertiesOverloader {
 
     private static boolean isPlatformWeb() {
         return config.getProperty(Config.PLATFORM).equalsIgnoreCase("Web");
-    }
-
-    private static int getThreadCount() {
-        String xmlFilePath = System.getProperty("user.dir") + "/" + System.getProperty("suiteXmlFile");
-        Parser parser = new Parser(xmlFilePath);
-        XmlSuite xmlSuite;
-        try {
-            xmlSuite = parser.parseToList().get(0);
-        } catch (IOException ex) {
-            LOGGER.info("ERROR: Unable to find or load testng.xml file at location: "
-                    + xmlFilePath + "\n");
-            LOGGER.debug(ExceptionUtils.getStackTrace(ex));
-            throw new RuntimeException("ERROR: Unable to find or load testng.xml file at location: "
-                    + xmlFilePath + "\n", ex);
-        }
-        if ("none".equalsIgnoreCase(xmlSuite.getParallel().toString())) {
-            return DEFAULT_THREAD_COUNT;
-        }
-        return xmlSuite.getThreadCount();
     }
 
     private static void setRPAttributesFromSystemVariables() {
