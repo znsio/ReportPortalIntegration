@@ -14,6 +14,7 @@ public class ReportPortalLogger {
     private static final Logger LOGGER = Logger.getLogger(ReportPortalLogger.class.getSimpleName());
     public static final String DEBUG = "DEBUG";
     public static final String INFO = "INFO";
+    public static final String ERROR = "ERROR";
     public static final String WARN = "WARN";
     private static final String DEFAULT_MESSAGE_FOR_SCREENSHOT = "Captured Screenshot";
 
@@ -52,6 +53,11 @@ public class ReportPortalLogger {
     public static void logInfoMessage(String message) {
         LOGGER.info(message);
         logMessage(message, INFO);
+    }
+
+    public static void logErrorMessage(String message) {
+        LOGGER.error(message);
+        logMessage(message, ERROR);
     }
 
     private static String getCallingClassAndMethodName() {
