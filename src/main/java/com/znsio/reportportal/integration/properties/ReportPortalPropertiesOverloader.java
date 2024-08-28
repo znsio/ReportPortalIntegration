@@ -18,8 +18,6 @@ public class ReportPortalPropertiesOverloader {
     private static ListenerParameters parameters = new ListenerParameters(PropertiesLoader.load());
     private static Set<ItemAttributesRQ> itemAttributesRQSet = new HashSet<>();
     private static final Logger LOGGER = Logger.getLogger(ReportPortalPropertiesOverloader.class.getName());
-    private static final String WEB_AUTOMATION = "WebAutomation";
-    private static final String APP_AUTOMATION = "AppAutomation";
     private static final String NOT_SET = "not-set";
     private static final String RP_PREFIX = "RP_";
     private static final Properties config = Config.loadProperties(System.getProperty("RP_CONFIG"));
@@ -35,13 +33,11 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static void setLaunchName() {
-        if (isPlatformWeb()) {
-            parameters.setLaunchName(config.getProperty(Config.APP_NAME) + " - " + WEB_AUTOMATION + " - " +
-                    config.getProperty(Config.PLATFORM).toUpperCase());
-        } else {
-            parameters.setLaunchName(config.getProperty(Config.APP_NAME) + " - " + APP_AUTOMATION + " - " +
-                    config.getProperty(Config.PLATFORM).toUpperCase());
-        }
+        parameters.setLaunchName(getAppName() + " - " + config.getProperty(Config.PLATFORM).toUpperCase());
+    }
+
+    private static String getAppName() {
+        return getOverriddenStringValue(Config.APP_NAME, config.getProperty(Config.APP_NAME));
     }
 
     private static void setSystemAttributes() {
