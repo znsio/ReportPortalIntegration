@@ -39,6 +39,7 @@ public class ReportPortalPropertiesOverloader {
         if (null != description) {
             System.out.println("Add custom launch description: " + description);
             parameters.setDescription(description);
+            System.setProperty("rp.description", description);
         }
     }
 
