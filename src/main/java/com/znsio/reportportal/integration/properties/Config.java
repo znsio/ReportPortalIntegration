@@ -13,7 +13,7 @@ import java.util.Properties;
 public class Config {
     public static final String TARGET_ENVIRONMENT = "TARGET_ENVIRONMENT";
     public static final String PLATFORM = "PLATFORM";
-    public static final String APP_NAME = "APP_NAME";
+    public static final String LAUNCH_NAME = "LAUNCH_NAME";
     public static final String IS_VISUAL = "IS_VISUAL";
     public static final String IS_LOCAL_DEVICE = "IS_LOCAL_DEVICE";
     public static final String BROWSER = "BROWSER";
@@ -22,6 +22,7 @@ public class Config {
     public static final String BUILD_ID = "BUILD_ID";
     public static final String AGENT_NAME = "AGENT_NAME";
     public static final String BRANCH_NAME = "BRANCH_NAME";
+    public static final String DESCRIPTION = "DESCRIPTION";
     private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
 
     @NotNull

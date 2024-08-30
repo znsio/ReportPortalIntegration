@@ -125,7 +125,7 @@
 2. **Configuring the test metadata:** 
 
    1. The following property values are mandatory to be provided for capturing the relevant test execution metadata. You can provide them in the reportportal.properties file, or add a System property *RP_CONFIG* with the relative path from project root directory (user.dir) where this file exists.
-      * APP_NAME=[application_name]
+      * LAUNCH_NAME=[application_name]
       * TARGET_ENVIRONMENT=[dev/qa/preprod/prod]
       * PLATFORM=[web/android/ios/desktop/api/etc.]
       * BROWSER=[if Platform==web, which browser is used for test execution - chrome/firefox/na]

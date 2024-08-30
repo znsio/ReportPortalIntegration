@@ -29,15 +29,31 @@ public class ReportPortalPropertiesOverloader {
         setPipelineAttributes();
         setRPAttributesFromSystemVariables();
         parameters.setAttributes(itemAttributesRQSet);
+        setLaunchDescription();
         return parameters;
     }
 
-    private static void setLaunchName() {
-        parameters.setLaunchName(getAppName() + " - " + config.getProperty(Config.PLATFORM).toUpperCase());
+    private static void setLaunchDescription() {
+        String description = getOverriddenStringValue(Config.DESCRIPTION);
+        System.out.println("Provided launch description: " + description);
+        if (null != description) {
+            System.out.println("Add custom launch description: " + description);
+            parameters.setDescription(description);
+        }
     }
 
-    private static String getAppName() {
-        return getOverriddenStringValue(Config.APP_NAME, config.getProperty(Config.APP_NAME));
+    private static void setLaunchName() {
+        String launchName = getLaunchName();
+        parameters.setLaunchName(launchName);
+        addAttributes(Config.LAUNCH_NAME, launchName);
+    }
+
+    private static String getPlatform() {
+        return (null == config.getProperty(Config.PLATFORM)) ? NOT_SET : config.getProperty(Config.PLATFORM).toUpperCase();
+    }
+
+    private static String getLaunchName() {
+        return getOverriddenStringValue(Config.LAUNCH_NAME, config.getProperty(Config.LAUNCH_NAME));
     }
 
     private static void setSystemAttributes() {
@@ -56,7 +72,7 @@ public class ReportPortalPropertiesOverloader {
 
     private static void setTestAttributes() {
         addAttributes("TargetEnvironment", config.getProperty(Config.TARGET_ENVIRONMENT));
-        addAttributes("Platform", config.getProperty(Config.PLATFORM).toUpperCase());
+        addAttributes("Platform", getPlatform());
         if (isPlatformWeb()) {
             addAttributes("Browser", config.getProperty(Config.BROWSER));
         } else {
@@ -102,7 +118,7 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static boolean isPlatformWeb() {
-        return config.getProperty(Config.PLATFORM).equalsIgnoreCase("Web");
+        return getPlatform().equalsIgnoreCase("Web");
     }
 
     private static void setRPAttributesFromSystemVariables() {
@@ -135,6 +151,7 @@ public class ReportPortalPropertiesOverloader {
 
     private static void addAttributes(String key, String value) {
         if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(value)) {
+            System.out.println("Adding attribute: key: " + key + ", with value: " + value);
             itemAttributesRQSet.add(new ItemAttributesRQ(key, value));
         }
     }
