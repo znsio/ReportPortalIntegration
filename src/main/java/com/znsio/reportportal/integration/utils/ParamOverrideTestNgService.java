@@ -32,7 +32,7 @@ public class ParamOverrideTestNgService extends TestNGService {
         rq.setStartTime(Calendar.getInstance().getTime());
         rq.setAttributes(parameters.getAttributes());
         rq.setMode(parameters.getLaunchRunningMode());
-        if (!StringUtils.isNotEmpty(parameters.getDescription())) {
+        if (StringUtils.isNotEmpty(parameters.getDescription())) {
             rq.setDescription(parameters.getDescription());
         }
         return rq;

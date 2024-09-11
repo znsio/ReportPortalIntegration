@@ -28,25 +28,23 @@ public class ReportPortalPropertiesOverloader {
         setTestAttributes();
         setPipelineAttributes();
         setRPAttributesFromSystemVariables();
-        parameters.setAttributes(itemAttributesRQSet);
         setLaunchDescription();
+        parameters.setAttributes(itemAttributesRQSet);
         return parameters;
     }
 
     private static void setLaunchDescription() {
-        String description = getOverriddenStringValue(Config.DESCRIPTION);
+        String description = getOverriddenStringValue(Config.DESCRIPTION, config.getProperty(Config.DESCRIPTION));
         System.out.println("Provided launch description: " + description);
         if (null != description) {
             System.out.println("Add custom launch description: " + description);
             parameters.setDescription(description);
-            System.setProperty("rp.description", description);
         }
     }
 
     private static void setLaunchName() {
         String launchName = getLaunchName();
         parameters.setLaunchName(launchName);
-        addAttributes(Config.LAUNCH_NAME, launchName);
     }
 
     private static String getPlatform() {
