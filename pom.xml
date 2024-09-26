@@ -7,7 +7,7 @@
 
     <groupId>com.github.znsio</groupId>
     <artifactId>ReportPortalIntegration</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <name>ReportPortalIntegration</name>
 
     <properties>
