@@ -8,6 +8,7 @@ import com.znsio.reportportal.integration.utils.commandline.CommandLineResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -44,6 +45,17 @@ public class ReportPortalPropertiesOverloader {
 
     private static void setLaunchName() {
         String launchName = getLaunchName();
+        if (null == launchName) {
+            String testNameProperty = System.getProperty("test");
+            if (null != testNameProperty) {
+                launchName = testNameProperty;
+                System.out.println("Running a test. Use test name (" + launchName + ") as launch name");
+            } else {
+                launchName = new File(System.getProperty("user.dir")).getName();
+                System.out.println("Use current directory name (" + launchName + ") as the launch name");
+            }
+        }
+        System.out.println("Launch Name: " + launchName);
         parameters.setLaunchName(launchName);
     }
 
