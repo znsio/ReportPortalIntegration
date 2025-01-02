@@ -2,7 +2,8 @@ package com.znsio.reportportal.integration.utils;
 
 import com.epam.reportportal.service.ReportPortal;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
@@ -11,11 +12,11 @@ import java.util.Date;
 import static com.znsio.reportportal.integration.utils.ScreenShotManager.captureScreenShot;
 
 public class ReportPortalLogger {
-    private static final Logger LOGGER = Logger.getLogger(ReportPortalLogger.class.getSimpleName());
     public static final String DEBUG = "DEBUG";
     public static final String INFO = "INFO";
     public static final String ERROR = "ERROR";
     public static final String WARN = "WARN";
+    private static final Logger LOGGER = LogManager.getLogger(ReportPortalLogger.class.getSimpleName());
     private static final String DEFAULT_MESSAGE_FOR_SCREENSHOT = "Captured Screenshot";
 
     private ReportPortalLogger() {
@@ -36,7 +37,7 @@ public class ReportPortalLogger {
         boolean isEmitLogSuccessful = ReportPortal.emitLog(message, INFO, new Date(), destinationFile);
         if (!isEmitLogSuccessful) {
             LOGGER.error(String.format("'%s' - Upload of file: '%s'::'%s' to ReportPortal failed",
-                    getCallingClassAndMethodName(), message, destinationFile));
+                                       getCallingClassAndMethodName(), message, destinationFile));
         }
     }
 
@@ -74,7 +75,7 @@ public class ReportPortalLogger {
         boolean isEmitLogSuccessful = ReportPortal.emitLog(message, level, new Date());
         if (!isEmitLogSuccessful) {
             LOGGER.error(String.format("'%s' - Logging message: '%s' to ReportPortal failed",
-                    getCallingClassAndMethodName(), message));
+                                       getCallingClassAndMethodName(), message));
 
         }
     }
@@ -85,7 +86,7 @@ public class ReportPortalLogger {
         } catch (RuntimeException e) {
             LOGGER.info(
                     "ERROR: Unable to upload screenshot: '" + destinationFile.getAbsolutePath() +
-                            "' to ReportPortal\n");
+                    "' to ReportPortal\n");
             LOGGER.debug(ExceptionUtils.getStackTrace(e));
         }
     }

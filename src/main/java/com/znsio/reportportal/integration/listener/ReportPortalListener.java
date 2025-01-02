@@ -7,6 +7,7 @@ import com.znsio.reportportal.integration.utils.ParamOverrideTestNgService;
 public class ReportPortalListener extends BaseTestNGListener {
     private static final ParamOverrideTestNgService paramOverrideTestNgService = new ParamOverrideTestNgService(ReportPortalPropertiesOverloader.getProperties());
     private static boolean isInitialized = false;
+
     public ReportPortalListener() {
         super(paramOverrideTestNgService);
     }

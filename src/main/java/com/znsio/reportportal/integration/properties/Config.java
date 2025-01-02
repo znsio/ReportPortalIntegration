@@ -1,7 +1,8 @@
 package com.znsio.reportportal.integration.properties;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
@@ -23,7 +24,7 @@ public class Config {
     public static final String AGENT_NAME = "AGENT_NAME";
     public static final String BRANCH_NAME = "BRANCH_NAME";
     public static final String DESCRIPTION = "DESCRIPTION";
-    private static final Logger LOGGER = Logger.getLogger(Config.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(Config.class.getName());
 
     @NotNull
     public static Properties loadProperties(String configFile) {

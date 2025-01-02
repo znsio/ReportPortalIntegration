@@ -6,7 +6,8 @@ import com.epam.ta.reportportal.ws.model.attribute.ItemAttributesRQ;
 import com.znsio.reportportal.integration.utils.commandline.CommandLineExecutor;
 import com.znsio.reportportal.integration.utils.commandline.CommandLineResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -16,12 +17,12 @@ import java.util.*;
 import static com.znsio.reportportal.integration.utils.OverriddenVariable.getOverriddenStringValue;
 
 public class ReportPortalPropertiesOverloader {
-    private static ListenerParameters parameters = new ListenerParameters(PropertiesLoader.load());
-    private static Set<ItemAttributesRQ> itemAttributesRQSet = new HashSet<>();
-    private static final Logger LOGGER = Logger.getLogger(ReportPortalPropertiesOverloader.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(ReportPortalPropertiesOverloader.class.getName());
     private static final String NOT_SET = "not-set";
     private static final String RP_PREFIX = "RP_";
     private static final Properties config = Config.loadProperties(System.getProperty("RP_CONFIG"));
+    private static ListenerParameters parameters = new ListenerParameters(PropertiesLoader.load());
+    private static Set<ItemAttributesRQ> itemAttributesRQSet = new HashSet<>();
 
     public static ListenerParameters getProperties() {
         setLaunchName();
@@ -77,7 +78,7 @@ public class ReportPortalPropertiesOverloader {
             }
         } catch (UnknownHostException ex) {
             LOGGER.warn("Unable to set Report Portal " +
-                    "Attributes for HostName: " + ex);
+                        "Attributes for HostName: " + ex);
         }
     }
 
@@ -91,18 +92,18 @@ public class ReportPortalPropertiesOverloader {
             addAttributes("LocalDeviceExecution", config.getProperty(Config.IS_LOCAL_DEVICE));
         }
         addAttributes("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL,
-                config.getProperty(Config.IS_VISUAL, "false")));
+                                                                config.getProperty(Config.IS_VISUAL, "false")));
         addAttributes("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
-                getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
+                                                                   getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
     }
 
     private static void setPipelineAttributes() {
         if (Boolean.parseBoolean(getOverriddenStringValue(Config.RUN_IN_CI, config.getProperty(Config.RUN_IN_CI)))) {
             addAttributes("RunInCI", "true");
             addAttributes("PipelineExecutionID", getOverriddenStringValue(Config.BUILD_ID,
-                    getOverriddenStringValue(config.getProperty(Config.BUILD_ID), NOT_SET)));
+                                                                          getOverriddenStringValue(config.getProperty(Config.BUILD_ID), NOT_SET)));
             addAttributes("AgentName", getOverriddenStringValue(Config.AGENT_NAME,
-                    getOverriddenStringValue(config.getProperty(Config.AGENT_NAME), NOT_SET)));
+                                                                getOverriddenStringValue(config.getProperty(Config.AGENT_NAME), NOT_SET)));
         } else {
             addAttributes("RunInCI", "false");
         }
@@ -114,7 +115,7 @@ public class ReportPortalPropertiesOverloader {
         CommandLineResponse response = CommandLineExecutor.execCommand(getBranchNameCommand);
         String branchName = response.getStdOut();
         LOGGER.info(String.format("\tBranch name from git command: '%s': '%s'",
-                Arrays.toString(getBranchNameCommand), branchName));
+                                  Arrays.toString(getBranchNameCommand), branchName));
         return branchName;
     }
 
@@ -124,7 +125,7 @@ public class ReportPortalPropertiesOverloader {
         CommandLineResponse response = CommandLineExecutor.execCommand(getBrowserVersionCommand);
         String BrowserVersion = response.getStdOut();
         LOGGER.info(String.format("\tBrowser Version from CLI command: '%s': '%s'",
-                Arrays.toString(getBrowserVersionCommand), BrowserVersion));
+                                  Arrays.toString(getBrowserVersionCommand), BrowserVersion));
         return BrowserVersion;
     }
 

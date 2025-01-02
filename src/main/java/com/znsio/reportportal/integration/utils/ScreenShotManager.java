@@ -1,7 +1,8 @@
 package com.znsio.reportportal.integration.utils;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -14,8 +15,8 @@ import java.io.IOException;
 
 public class ScreenShotManager {
     private static final String directoryPath = System.getProperty("user.dir") + File.separator +
-            "TestReport/Screenshots";
-    private static final Logger LOGGER = Logger.getLogger(ScreenShotManager.class.getSimpleName());
+                                                "TestReport/Screenshots";
+    private static final Logger LOGGER = LogManager.getLogger(ScreenShotManager.class.getSimpleName());
 
     public static File captureScreenShot(WebDriver webDriver) {
         String testName = Thread.currentThread().getStackTrace()[4].getMethodName();
@@ -66,15 +67,15 @@ public class ScreenShotManager {
             BufferedImage bufferedImage = ImageIO.read(source);
             // Create a blank, RGB, same width and height, and a white background
             BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
-                    bufferedImage.getHeight(),
-                    BufferedImage.TYPE_INT_RGB);
+                                                               bufferedImage.getHeight(),
+                                                               BufferedImage.TYPE_INT_RGB);
             newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
             // Write to a JPEG file
             ImageIO.write(newBufferedImage, "jpg", destination);
         } catch (IOException e) {
             LOGGER.info(
                     "ERROR: Unable to read from source file: '" + source.getAbsolutePath()
-                            + "' or write to destination file: '" + destination.getAbsolutePath() + "'\n");
+                    + "' or write to destination file: '" + destination.getAbsolutePath() + "'\n");
             LOGGER.debug(ExceptionUtils.getStackTrace(e));
         }
     }

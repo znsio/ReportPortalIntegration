@@ -8,8 +8,8 @@ public class OverriddenVariable {
 
     public static String getOverriddenStringValue(String key, String defaultValue) {
         return (isKeyProvidedInEnvOrProperty(key))
-                ? getValueFromEnvOrProperty(key)
-                : defaultValue;
+               ? getValueFromEnvOrProperty(key)
+               : defaultValue;
     }
 
     private static boolean isKeyProvidedInEnvOrProperty(String key) {
