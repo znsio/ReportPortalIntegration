@@ -14,23 +14,21 @@ import java.io.File;
 import java.io.IOException;
 
 public class ScreenShotManager {
-    private static final String directoryPath = System.getProperty("user.dir") + File.separator +
-                                                "TestReport/Screenshots";
     private static final Logger LOGGER = LogManager.getLogger(ScreenShotManager.class.getSimpleName());
 
-    public static File captureScreenShot(WebDriver webDriver) {
+    static File captureScreenShot(WebDriver webDriver, String rootFolder) {
         String testName = Thread.currentThread().getStackTrace()[4].getMethodName();
         String fileName = Thread.currentThread().getStackTrace()[3].getMethodName();
-        return processScreenShot(webDriver, testName, fileName);
+        return processScreenShot(webDriver, rootFolder, testName, fileName);
     }
 
-    private static File processScreenShot(WebDriver driver, String testName, String fileName) {
+    private static File processScreenShot(WebDriver driver, String rootFolder, String testName, String fileName) {
         fileName = normaliseScenarioName(getPrefix() + "-" + fileName);
         File destinationFile;
         if (testName != null && !testName.isEmpty()) {
-            destinationFile = createScreenshotFile(directoryPath + File.separator + testName, fileName);
+            destinationFile = createScreenshotFile(rootFolder + File.separator + testName, fileName);
         } else {
-            destinationFile = createScreenshotFile(directoryPath, fileName);
+            destinationFile = createScreenshotFile(rootFolder, fileName);
         }
         destinationFile.getParentFile().mkdirs();
         LOGGER.info("The screenshot will be placed here : " + destinationFile.getAbsolutePath());

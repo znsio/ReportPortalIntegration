@@ -9,8 +9,6 @@ import org.openqa.selenium.WebDriver;
 import java.io.File;
 import java.util.Date;
 
-import static com.znsio.reportportal.integration.utils.ScreenShotManager.captureScreenShot;
-
 public class ReportPortalLogger {
     public static final String DEBUG = "DEBUG";
     public static final String INFO = "INFO";
@@ -18,18 +16,24 @@ public class ReportPortalLogger {
     public static final String WARN = "WARN";
     private static final Logger LOGGER = LogManager.getLogger(ReportPortalLogger.class.getSimpleName());
     private static final String DEFAULT_MESSAGE_FOR_SCREENSHOT = "Captured Screenshot";
-
+    private static final String DEFAULT_ROOT_DIRECTORY = System.getProperty("user.dir") + File.separator +
+                                                         "TestReport/Screenshots";
     private ReportPortalLogger() {
         LOGGER.debug("ReportPortalLogger - private constructor");
     }
 
     public static void captureAndAttachScreenshot(WebDriver webDriver) {
-        File destinationFile = captureScreenShot(webDriver);
+        File destinationFile = ScreenShotManager.captureScreenShot(webDriver, DEFAULT_ROOT_DIRECTORY);
         attachScreenshotInReportPortal(DEFAULT_MESSAGE_FOR_SCREENSHOT, destinationFile);
     }
 
-    public static void captureAndAttachScreenshot(WebDriver webDriver, String message) {
-        File destinationFile = captureScreenShot(webDriver);
+    public static void captureAndAttachScreenshot(WebDriver webDriver, String rootFolder) {
+        File destinationFile = ScreenShotManager.captureScreenShot(webDriver, rootFolder);
+        attachScreenshotInReportPortal(DEFAULT_MESSAGE_FOR_SCREENSHOT, destinationFile);
+    }
+
+    public static void captureAndAttachScreenshot(WebDriver webDriver, String rootFolder, String message) {
+        File destinationFile = ScreenShotManager.captureScreenShot(webDriver, rootFolder);
         attachScreenshotInReportPortal(message, destinationFile);
     }
 
