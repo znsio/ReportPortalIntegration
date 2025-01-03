@@ -27,13 +27,12 @@ public class ReportPortalLogger {
         attachScreenshotInReportPortal(DEFAULT_MESSAGE_FOR_SCREENSHOT, destinationFile);
     }
 
-    public static void captureAndAttachScreenshot(WebDriver webDriver, String rootFolder) {
-        File destinationFile = ScreenShotManager.captureScreenShot(webDriver, rootFolder);
-        attachScreenshotInReportPortal(DEFAULT_MESSAGE_FOR_SCREENSHOT, destinationFile);
+    public static void captureAndAttachScreenshot(WebDriver webDriver, File rootFolder) {
+        captureAndAttachScreenshot(webDriver, rootFolder, DEFAULT_MESSAGE_FOR_SCREENSHOT);
     }
 
-    public static void captureAndAttachScreenshot(WebDriver webDriver, String rootFolder, String message) {
-        File destinationFile = ScreenShotManager.captureScreenShot(webDriver, rootFolder);
+    public static void captureAndAttachScreenshot(WebDriver webDriver, File rootFolder, String message) {
+        File destinationFile = ScreenShotManager.captureScreenShot(webDriver, rootFolder.getAbsolutePath());
         attachScreenshotInReportPortal(message, destinationFile);
     }
 
