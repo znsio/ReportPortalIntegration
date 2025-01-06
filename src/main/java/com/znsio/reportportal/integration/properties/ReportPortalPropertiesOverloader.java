@@ -113,12 +113,12 @@ public class ReportPortalPropertiesOverloader {
         addAttributeIfAvailable("RunInCI", getOverriddenStringValue(Config.RUN_IN_CI, config.getProperty(Config.RUN_IN_CI)));
         String buildIDKeyName = getOverriddenStringValue(Config.BUILD_ID, config.getProperty(Config.BUILD_ID));
         if (null!=buildIDKeyName) {
-            addAttributeIfAvailable("PipelineExecutionID", getOverriddenStringValue(Config.BUILD_ID, getOverriddenStringValue(buildIDKeyName)));
+            addAttributeIfAvailable("PipelineExecutionID", getOverriddenStringValue(buildIDKeyName));
         }
 
         String agentName = getOverriddenStringValue(Config.CI_AGENT_NAME, config.getProperty(Config.CI_AGENT_NAME));
         if (null!=agentName) {
-            addAttributeIfAvailable("AgentName", getOverriddenStringValue(Config.CI_AGENT_NAME, agentName));
+            addAttributeIfAvailable("AgentName", getOverriddenStringValue(agentName));
         }
     }
 
