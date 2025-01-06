@@ -23,25 +23,46 @@ public class ReportPortalPropertiesOverloader {
     private static final Properties config = Config.loadProperties(System.getProperty("RP_CONFIG"));
     private static ListenerParameters parameters = new ListenerParameters(PropertiesLoader.load());
     private static Set<ItemAttributesRQ> itemAttributesRQSet = new HashSet<>();
+    private static String logMessage = "\n\n" +
+                                       "--------------------------------\n" +
+                                       "Use ReportPortal configuration: \n" +
+                                       "--------------------------------\n";
 
     public static ListenerParameters getProperties() {
         setLaunchName();
         setSystemAttributes();
         setTestAttributes();
-        setPipelineAttributes();
-        setRPAttributesFromSystemVariables();
+        setCIExecutionAttributes();
+        setCustomRPAttributesFromPropertiesFile();
+        setRPAttributesFromEnvVariables();
+        setRPAttributesFromSystemProperties();
         setLaunchDescription();
+        LOGGER.info(logMessage + "\n--------------------------------\n");
         parameters.setAttributes(itemAttributesRQSet);
         return parameters;
     }
 
+    private static void setCustomRPAttributesFromPropertiesFile() {
+        config.keySet().stream()
+                .map(Object::toString) // Ensure keys are strings
+                .filter(key -> key.startsWith(RP_PREFIX)) // Filter by prefix
+                .forEach(key -> {
+                    String value = config.getProperty(key);
+                    addAttributeIfAvailable(getKeyWithoutPrefix(key), value);
+                });
+    }
+
     private static void setLaunchDescription() {
         String description = getOverriddenStringValue(Config.DESCRIPTION, config.getProperty(Config.DESCRIPTION));
-        System.out.println("Provided launch description: " + description);
+        addToLogMessage("Provided launch description: " + description);
         if (null != description) {
-            System.out.println("Add custom launch description: " + description);
+            addToLogMessage("Add custom launch description: " + description);
             parameters.setDescription(description);
         }
+    }
+
+    private static void addToLogMessage(String message) {
+        logMessage += "\n" + message;
     }
 
     private static void setLaunchName() {
@@ -50,18 +71,14 @@ public class ReportPortalPropertiesOverloader {
             String testNameProperty = System.getProperty("test");
             if (null != testNameProperty) {
                 launchName = testNameProperty;
-                System.out.println("Running a test. Use test name (" + launchName + ") as launch name");
+                addToLogMessage("Running a test. Use test name (" + launchName + ") as launch name");
             } else {
                 launchName = new File(System.getProperty("user.dir")).getName();
-                System.out.println("Use current directory name (" + launchName + ") as the launch name");
+                addToLogMessage("Use current directory name (" + launchName + ") as the launch name");
             }
         }
-        System.out.println("Launch Name: " + launchName);
+        addToLogMessage("Launch Name: " + launchName);
         parameters.setLaunchName(launchName);
-    }
-
-    private static String getPlatform() {
-        return (null == config.getProperty(Config.PLATFORM)) ? NOT_SET : config.getProperty(Config.PLATFORM).toUpperCase();
     }
 
     private static String getLaunchName() {
@@ -69,43 +86,39 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static void setSystemAttributes() {
-        addAttributes("OS", System.getProperty("os.name"));
-        addAttributes("Username", System.getProperty("user.name"));
+        addAttributeIfAvailable("OS", System.getProperty("os.name"));
+        addAttributeIfAvailable("Username", System.getProperty("user.name"));
         try {
             if (StringUtils.isNotEmpty(InetAddress.getLocalHost().getHostName())) {
                 String hostName = InetAddress.getLocalHost().getHostName();
-                addAttributes("HostName", hostName);
+                addAttributeIfAvailable("HostName", hostName);
             }
         } catch (UnknownHostException ex) {
-            LOGGER.warn("Unable to set Report Portal " +
-                        "Attributes for HostName: " + ex);
+            LOGGER.warn("Unable to set Report Portal Attributes for HostName: " + ex);
         }
     }
 
     private static void setTestAttributes() {
-        addAttributes("TargetEnvironment", config.getProperty(Config.TARGET_ENVIRONMENT));
-        addAttributes("Platform", getPlatform());
-        if (isPlatformWeb()) {
-            addAttributes("Browser", config.getProperty(Config.BROWSER));
-        } else {
-            addAttributes("App", config.getProperty(Config.APP_PACKAGE_NAME));
-            addAttributes("LocalDeviceExecution", config.getProperty(Config.IS_LOCAL_DEVICE));
-        }
-        addAttributes("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL,
-                                                                config.getProperty(Config.IS_VISUAL, "false")));
-        addAttributes("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
-                                                                   getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
+        addAttributeIfAvailable("TargetEnvironment", getOverriddenStringValue(Config.IS_VISUAL, config.getProperty(Config.TARGET_ENVIRONMENT)));
+        addAttributeIfAvailable("Platform", getOverriddenStringValue(Config.PLATFORM, config.getProperty(Config.PLATFORM)));
+        addAttributeIfAvailable("Browser", getOverriddenStringValue(Config.BROWSER, config.getProperty(Config.BROWSER)));
+        addAttributeIfAvailable("App", getOverriddenStringValue(Config.APP_PACKAGE_NAME, config.getProperty(Config.APP_PACKAGE_NAME)));
+        addAttributeIfAvailable("LocalDeviceExecution", getOverriddenStringValue(Config.IS_LOCAL_DEVICE, config.getProperty(Config.IS_LOCAL_DEVICE)));
+        addAttributeIfAvailable("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL, config.getProperty(Config.IS_VISUAL, "false")));
+        addAttributeIfAvailable("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
+                                                                             getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
     }
 
-    private static void setPipelineAttributes() {
-        if (Boolean.parseBoolean(getOverriddenStringValue(Config.RUN_IN_CI, config.getProperty(Config.RUN_IN_CI)))) {
-            addAttributes("RunInCI", "true");
-            addAttributes("PipelineExecutionID", getOverriddenStringValue(Config.BUILD_ID,
-                                                                          getOverriddenStringValue(config.getProperty(Config.BUILD_ID), NOT_SET)));
-            addAttributes("AgentName", getOverriddenStringValue(Config.AGENT_NAME,
-                                                                getOverriddenStringValue(config.getProperty(Config.AGENT_NAME), NOT_SET)));
-        } else {
-            addAttributes("RunInCI", "false");
+    private static void setCIExecutionAttributes() {
+        addAttributeIfAvailable("RunInCI", getOverriddenStringValue(Config.RUN_IN_CI, config.getProperty(Config.RUN_IN_CI)));
+        String buildIDKeyName = getOverriddenStringValue(Config.BUILD_ID, config.getProperty(Config.BUILD_ID));
+        if (null!=buildIDKeyName) {
+            addAttributeIfAvailable("PipelineExecutionID", getOverriddenStringValue(Config.BUILD_ID, getOverriddenStringValue(buildIDKeyName)));
+        }
+
+        String agentName = getOverriddenStringValue(Config.CI_AGENT_NAME, config.getProperty(Config.CI_AGENT_NAME));
+        if (null!=agentName) {
+            addAttributeIfAvailable("AgentName", getOverriddenStringValue(Config.CI_AGENT_NAME, agentName));
         }
     }
 
@@ -114,7 +127,7 @@ public class ReportPortalPropertiesOverloader {
         String[] getBranchNameCommand = new String[]{"git", "rev-parse", "--abbrev-ref", "HEAD"};
         CommandLineResponse response = CommandLineExecutor.execCommand(getBranchNameCommand);
         String branchName = response.getStdOut();
-        LOGGER.info(String.format("\tBranch name from git command: '%s': '%s'",
+        addToLogMessage(String.format("\tBranch name from git command: '%s': '%s'",
                                   Arrays.toString(getBranchNameCommand), branchName));
         return branchName;
     }
@@ -124,18 +137,9 @@ public class ReportPortalPropertiesOverloader {
         String[] getBrowserVersionCommand = new String[]{browserPath, "-v", "|", "awk", "'{print $2}'"};
         CommandLineResponse response = CommandLineExecutor.execCommand(getBrowserVersionCommand);
         String BrowserVersion = response.getStdOut();
-        LOGGER.info(String.format("\tBrowser Version from CLI command: '%s': '%s'",
+        addToLogMessage(String.format("\tBrowser Version from CLI command: '%s': '%s'",
                                   Arrays.toString(getBrowserVersionCommand), BrowserVersion));
         return BrowserVersion;
-    }
-
-    private static boolean isPlatformWeb() {
-        return getPlatform().equalsIgnoreCase("Web");
-    }
-
-    private static void setRPAttributesFromSystemVariables() {
-        setRPAttributesFromEnvVariables();
-        setRPAttributesFromSystemProperties();
     }
 
     private static void setRPAttributesFromSystemProperties() {
@@ -143,7 +147,7 @@ public class ReportPortalPropertiesOverloader {
         Set<String> set = properties.stringPropertyNames();
         for (String propkey : set) {
             if (propkey.startsWith(RP_PREFIX)) {
-                addAttributes(getKeyWithoutPrefix(propkey), properties.getProperty(propkey));
+                addAttributeIfAvailable(getKeyWithoutPrefix(propkey), properties.getProperty(propkey));
             }
         }
     }
@@ -152,7 +156,7 @@ public class ReportPortalPropertiesOverloader {
         Map<String, String> map = System.getenv();
         for (String envKey : map.keySet()) {
             if (envKey.startsWith(RP_PREFIX)) {
-                addAttributes(getKeyWithoutPrefix(envKey), map.get(envKey));
+                addAttributeIfAvailable(getKeyWithoutPrefix(envKey), map.get(envKey));
             }
         }
     }
@@ -161,9 +165,9 @@ public class ReportPortalPropertiesOverloader {
         return key.substring(RP_PREFIX.length());
     }
 
-    private static void addAttributes(String key, String value) {
+    private static void addAttributeIfAvailable(String key, String value) {
         if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(value)) {
-            System.out.println("Adding attribute: key: " + key + ", with value: " + value);
+            addToLogMessage("Adding attribute: key: " + key + ", with value: " + value);
             itemAttributesRQSet.add(new ItemAttributesRQ(key, value));
         }
     }

@@ -21,33 +21,38 @@ public class Config {
     public static final String APP_PACKAGE_NAME = "APP_PACKAGE_NAME";
     public static final String RUN_IN_CI = "RUN_IN_CI";
     public static final String BUILD_ID = "BUILD_ID";
-    public static final String AGENT_NAME = "AGENT_NAME";
+    public static final String CI_AGENT_NAME = "CI_AGENT_NAME";
     public static final String BRANCH_NAME = "BRANCH_NAME";
     public static final String DESCRIPTION = "DESCRIPTION";
     private static final Logger LOGGER = LogManager.getLogger(Config.class.getName());
+    private static Properties loadedConfig = null;
 
     @NotNull
     public static Properties loadProperties(String configFile) {
-        if (null == configFile) {
-            configFile = "src/test/resources/reportportal.properties";
-        }
-        String configFilePath = System.getProperty("user.dir") + File.separator + configFile;
-        if (new File(configFilePath).exists()) {
-            LOGGER.info("Using config file: " + configFilePath);
-            final Properties properties;
-            try (InputStream input = new FileInputStream(configFilePath)) {
-                properties = new Properties();
-                properties.load(input);
-            } catch (IOException ex) {
-                LOGGER.info("ERROR: Config file not found, or unable to read it: "
-                            + configFile + "\n");
-                LOGGER.debug(ExceptionUtils.getStackTrace(ex));
-                throw new RuntimeException("ERROR: Config file not found, or unable to read it: "
-                                           + configFile + "\n", ex);
+        if (loadedConfig == null) {
+            LOGGER.info("Load reportportal properties");
+            if (null == configFile) {
+                configFile = "src/test/resources/reportportal.properties";
             }
-            return properties;
-        } else {
-            throw new RuntimeException("ERROR: Config file not found: " + configFile + "\n");
+            String configFilePath = System.getProperty("user.dir") + File.separator + configFile;
+            if (new File(configFilePath).exists()) {
+                LOGGER.info("Using config file: " + configFilePath);
+                final Properties properties;
+                try (InputStream input = new FileInputStream(configFilePath)) {
+                    properties = new Properties();
+                    properties.load(input);
+                } catch (IOException ex) {
+                    LOGGER.info("ERROR: Config file not found, or unable to read it: "
+                                + configFile + "\n");
+                    LOGGER.debug(ExceptionUtils.getStackTrace(ex));
+                    throw new RuntimeException("ERROR: Config file not found, or unable to read it: "
+                                               + configFile + "\n", ex);
+                }
+                loadedConfig = properties;
+            } else {
+                throw new RuntimeException("ERROR: Config file not found: " + configFile + "\n");
+            }
         }
+        return loadedConfig;
     }
 }

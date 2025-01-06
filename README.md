@@ -101,7 +101,7 @@
    is happening on CI (Pipeline)
    ```
    BUILD_ID
-   AGENT_NAME
+   CI_AGENT_NAME
    BRANCH_NAME
    ```
    All these attributes will be set as launch attributes if the execution is happening on CI, and if they are either set
@@ -135,12 +135,10 @@
       * BRANCH_NAME=[the current branch name as obtained by git command, or can be specified as an absolute value, or the environment varaiable/system property name which indicates the branch name]
       * RUN_IN_CI=[true/false] - if test is running in CI or not
       * BUILD_ID=[the environment variable or system property name which indicates the build id]
-      * AGENT_NAME=[the environment variable or system property name which indicates the CI agent name]
+      * CI_AGENT_NAME=[the environment variable or system property name which indicates the CI agent name]
    2. For setting any additional property to launch attributes which is not already configured
-      in `ReportPortalPropertiesOverloader` class, we need to set that attribute key and value at either System Property
-      level or at Environment variable. Any key with prefix `RP_` set at System property or Environment variable level will
-      be set as ReportPortal's launch attribute. The method which takes care of this configuration
-      is `setRPAttributesFromSystemVariables` defined inside `ReportPortalPropertiesOverloader` class.
+      in `ReportPortalPropertiesOverloader` class, we need to set that attribute key **with prefix - RP_** and value as either System Property
+      level or at Environment variable or in the reportportal.properties file. 
       For instance, if you're setting environment variable like `export RP_Version=0.0.1`, then on ReportPortal, you'll
       see the corresponding launch attribute as `Version:0.0.1`
 
