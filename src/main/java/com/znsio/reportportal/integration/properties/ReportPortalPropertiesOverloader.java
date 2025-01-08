@@ -99,7 +99,7 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static void setTestAttributes() {
-        addAttributeIfAvailable("TargetEnvironment", getOverriddenStringValue(Config.IS_VISUAL, config.getPropertyByIgnoringCase(Config.TARGET_ENVIRONMENT)));
+        addAttributeIfAvailable("TargetEnvironment", getOverriddenStringValue(Config.TARGET_ENVIRONMENT, config.getPropertyByIgnoringCase(Config.TARGET_ENVIRONMENT)));
         addAttributeIfAvailable("Platform", getOverriddenStringValue(Config.PLATFORM, config.getPropertyByIgnoringCase(Config.PLATFORM)));
         addAttributeIfAvailable("Browser", getOverriddenStringValue(Config.BROWSER, config.getPropertyByIgnoringCase(Config.BROWSER)));
         addAttributeIfAvailable("App", getOverriddenStringValue(Config.APP_PACKAGE_NAME, config.getPropertyByIgnoringCase(Config.APP_PACKAGE_NAME)));
