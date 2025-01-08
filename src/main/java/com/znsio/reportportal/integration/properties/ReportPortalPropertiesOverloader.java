@@ -20,7 +20,7 @@ public class ReportPortalPropertiesOverloader {
     private static final Logger LOGGER = LogManager.getLogger(ReportPortalPropertiesOverloader.class.getName());
     private static final String NOT_SET = "not-set";
     private static final String RP_PREFIX = "RP_";
-    private static final Properties config = Config.loadProperties(System.getProperty("RP_CONFIG"));
+    private static final CustomProperties config = Config.loadProperties(System.getProperty("RP_CONFIG"));
     private static ListenerParameters parameters = new ListenerParameters(PropertiesLoader.load());
     private static Set<ItemAttributesRQ> itemAttributesRQSet = new HashSet<>();
     private static String logMessage = "\n\n" +
@@ -47,13 +47,13 @@ public class ReportPortalPropertiesOverloader {
                 .map(Object::toString) // Ensure keys are strings
                 .filter(key -> key.startsWith(RP_PREFIX)) // Filter by prefix
                 .forEach(key -> {
-                    String value = config.getProperty(key);
+                    String value = config.getPropertyByIgnoringCase(key);
                     addAttributeIfAvailable(getKeyWithoutPrefix(key), value);
                 });
     }
 
     private static void setLaunchDescription() {
-        String description = getOverriddenStringValue(Config.DESCRIPTION, config.getProperty(Config.DESCRIPTION));
+        String description = getOverriddenStringValue(Config.DESCRIPTION, config.getPropertyByIgnoringCase(Config.DESCRIPTION));
         addToLogMessage("Provided launch description: " + description);
         if (null != description) {
             addToLogMessage("Add custom launch description: " + description);
@@ -82,7 +82,7 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static String getLaunchName() {
-        return getOverriddenStringValue(Config.LAUNCH_NAME, config.getProperty(Config.LAUNCH_NAME));
+        return getOverriddenStringValue(Config.LAUNCH_NAME, config.getPropertyByIgnoringCase(Config.LAUNCH_NAME));
     }
 
     private static void setSystemAttributes() {
@@ -99,24 +99,24 @@ public class ReportPortalPropertiesOverloader {
     }
 
     private static void setTestAttributes() {
-        addAttributeIfAvailable("TargetEnvironment", getOverriddenStringValue(Config.IS_VISUAL, config.getProperty(Config.TARGET_ENVIRONMENT)));
-        addAttributeIfAvailable("Platform", getOverriddenStringValue(Config.PLATFORM, config.getProperty(Config.PLATFORM)));
-        addAttributeIfAvailable("Browser", getOverriddenStringValue(Config.BROWSER, config.getProperty(Config.BROWSER)));
-        addAttributeIfAvailable("App", getOverriddenStringValue(Config.APP_PACKAGE_NAME, config.getProperty(Config.APP_PACKAGE_NAME)));
-        addAttributeIfAvailable("LocalDeviceExecution", getOverriddenStringValue(Config.IS_LOCAL_DEVICE, config.getProperty(Config.IS_LOCAL_DEVICE)));
-        addAttributeIfAvailable("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL, config.getProperty(Config.IS_VISUAL, "false")));
+        addAttributeIfAvailable("TargetEnvironment", getOverriddenStringValue(Config.IS_VISUAL, config.getPropertyByIgnoringCase(Config.TARGET_ENVIRONMENT)));
+        addAttributeIfAvailable("Platform", getOverriddenStringValue(Config.PLATFORM, config.getPropertyByIgnoringCase(Config.PLATFORM)));
+        addAttributeIfAvailable("Browser", getOverriddenStringValue(Config.BROWSER, config.getPropertyByIgnoringCase(Config.BROWSER)));
+        addAttributeIfAvailable("App", getOverriddenStringValue(Config.APP_PACKAGE_NAME, config.getPropertyByIgnoringCase(Config.APP_PACKAGE_NAME)));
+        addAttributeIfAvailable("LocalDeviceExecution", getOverriddenStringValue(Config.IS_LOCAL_DEVICE, config.getPropertyByIgnoringCase(Config.IS_LOCAL_DEVICE)));
+        addAttributeIfAvailable("VisualEnabled", getOverriddenStringValue(Config.IS_VISUAL, config.getPropertyByIgnoringCase(Config.IS_VISUAL, "false")));
         addAttributeIfAvailable("AutomationBranch", getOverriddenStringValue(Config.BRANCH_NAME,
-                                                                             getOverriddenStringValue(config.getProperty(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
+                                                                             getOverriddenStringValue(config.getPropertyByIgnoringCase(Config.BRANCH_NAME), getBranchNameUsingGitCommand())));
     }
 
     private static void setCIExecutionAttributes() {
-        addAttributeIfAvailable("RunInCI", getOverriddenStringValue(Config.RUN_IN_CI, config.getProperty(Config.RUN_IN_CI)));
-        String buildIDKeyName = getOverriddenStringValue(Config.BUILD_ID, config.getProperty(Config.BUILD_ID));
+        addAttributeIfAvailable("RunInCI", getOverriddenStringValue(Config.RUN_IN_CI, config.getPropertyByIgnoringCase(Config.RUN_IN_CI)));
+        String buildIDKeyName = getOverriddenStringValue(Config.BUILD_ID, config.getPropertyByIgnoringCase(Config.BUILD_ID));
         if (null!=buildIDKeyName) {
             addAttributeIfAvailable("PipelineExecutionID", getOverriddenStringValue(buildIDKeyName));
         }
 
-        String agentName = getOverriddenStringValue(Config.CI_AGENT_NAME, config.getProperty(Config.CI_AGENT_NAME));
+        String agentName = getOverriddenStringValue(Config.CI_AGENT_NAME, config.getPropertyByIgnoringCase(Config.CI_AGENT_NAME));
         if (null!=agentName) {
             addAttributeIfAvailable("AgentName", getOverriddenStringValue(agentName));
         }

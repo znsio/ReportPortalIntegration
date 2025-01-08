@@ -25,10 +25,10 @@ public class Config {
     public static final String BRANCH_NAME = "BRANCH_NAME";
     public static final String DESCRIPTION = "DESCRIPTION";
     private static final Logger LOGGER = LogManager.getLogger(Config.class.getName());
-    private static Properties loadedConfig = null;
+    private static CustomProperties loadedConfig = null;
 
     @NotNull
-    public static Properties loadProperties(String configFile) {
+    public static CustomProperties loadProperties(String configFile) {
         if (loadedConfig == null) {
             LOGGER.info("Load reportportal properties");
             if (null == configFile) {
@@ -37,9 +37,9 @@ public class Config {
             String configFilePath = System.getProperty("user.dir") + File.separator + configFile;
             if (new File(configFilePath).exists()) {
                 LOGGER.info("Using config file: " + configFilePath);
-                final Properties properties;
+                final CustomProperties properties;
                 try (InputStream input = new FileInputStream(configFilePath)) {
-                    properties = new Properties();
+                    properties = new CustomProperties();
                     properties.load(input);
                 } catch (IOException ex) {
                     LOGGER.info("ERROR: Config file not found, or unable to read it: "
