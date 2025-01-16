@@ -28,7 +28,7 @@ public class ReportPortalPropertiesOverloader {
                                        "Use ReportPortal configuration: \n" +
                                        "--------------------------------\n";
 
-    public static ListenerParameters getProperties() {
+    public synchronized static ListenerParameters getProperties() {
         setLaunchName();
         setSystemAttributes();
         setTestAttributes();

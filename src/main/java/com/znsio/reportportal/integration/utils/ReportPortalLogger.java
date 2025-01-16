@@ -22,25 +22,25 @@ public class ReportPortalLogger {
         LOGGER.debug("ReportPortalLogger - private constructor");
     }
 
-    public static void captureAndAttachScreenshot(WebDriver webDriver) {
+    public synchronized static void captureAndAttachScreenshot(WebDriver webDriver) {
         captureAndAttachScreenshot(webDriver, DEFAULT_MESSAGE_FOR_SCREENSHOT);
     }
 
-    public static void captureAndAttachScreenshot(WebDriver webDriver, String message) {
+    public synchronized static void captureAndAttachScreenshot(WebDriver webDriver, String message) {
         File destinationFile = ScreenShotManager.captureScreenShot(webDriver, DEFAULT_ROOT_DIRECTORY);
         attachScreenshotInReportPortal(message, destinationFile);
     }
 
-    public static void captureAndAttachScreenshot(WebDriver webDriver, File rootFolder) {
+    public synchronized static void captureAndAttachScreenshot(WebDriver webDriver, File rootFolder) {
         captureAndAttachScreenshot(webDriver, rootFolder, DEFAULT_MESSAGE_FOR_SCREENSHOT);
     }
 
-    public static void captureAndAttachScreenshot(WebDriver webDriver, File rootFolder, String message) {
+    public synchronized static void captureAndAttachScreenshot(WebDriver webDriver, File rootFolder, String message) {
         File destinationFile = ScreenShotManager.captureScreenShot(webDriver, rootFolder.getAbsolutePath());
         attachScreenshotInReportPortal(message, destinationFile);
     }
 
-    public static void attachFileInReportPortal(String message, File destinationFile) {
+    public synchronized static void attachFileInReportPortal(String message, File destinationFile) {
         boolean isEmitLogSuccessful = ReportPortal.emitLog(message, INFO, new Date(), destinationFile);
         if (!isEmitLogSuccessful) {
             LOGGER.error(String.format("'%s' - Upload of file: '%s'::'%s' to ReportPortal failed",
@@ -48,22 +48,22 @@ public class ReportPortalLogger {
         }
     }
 
-    public static void logDebugMessage(String message) {
+    public synchronized static void logDebugMessage(String message) {
         LOGGER.debug(message);
         logMessage(message, DEBUG);
     }
 
-    public static void logWarningMessage(String message) {
+    public synchronized static void logWarningMessage(String message) {
         LOGGER.warn(message);
         logMessage(message, WARN);
     }
 
-    public static void logInfoMessage(String message) {
+    public synchronized static void logInfoMessage(String message) {
         LOGGER.info(message);
         logMessage(message, INFO);
     }
 
-    public static void logErrorMessage(String message) {
+    public synchronized static void logErrorMessage(String message) {
         LOGGER.error(message);
         logMessage(message, ERROR);
     }
