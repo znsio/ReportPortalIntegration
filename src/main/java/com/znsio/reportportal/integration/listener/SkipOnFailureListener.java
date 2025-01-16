@@ -6,48 +6,87 @@ import org.testng.ITestListener;
 import org.testng.ITestResult;
 
 public class SkipOnFailureListener implements ITestListener {
-
     private boolean testFailure = false;
-    private String testName;
-    private String useCaseName;
+    private String testGroupNameHavingTestFailure = "";
+    private String testClassNameHavingTestFailure = "";
+    private String testMethodNameHavingTestFailure = "";
+    private String currentTestGroupName = "";
+    private String currentClassName = "";
+    private String currentTestMethodName = "";
+    private String messageTemplate =
+            "%n\t\tcurrentTestGroupName             : '%s'" +
+            "%n\t\tcurrentTestClassName             : '%s'" +
+            "%n\t\tcurrentTestMethodName            : '%s'" +
+            "%n\t\ttestGroupNameHavingTestFailure   : '%s'" +
+            "%n\t\ttestClassNameHavingTestFailure   : '%s'" +
+            "%n\t\ttestMethodNameHavingTestFailure  : '%s'" +
+            "%n\t\ttestFailure                      : '%s'";
 
     @Override
     public void onTestStart(ITestResult result) {
-        String currentUseCaseName = result.getTestContext().getCurrentXmlTest().getName();
-        if (testFailure && currentUseCaseName.equalsIgnoreCase(useCaseName)) {
+        if (result == null) {
+            ReportPortalLogger.logErrorMessage("SkipOnFailureListener: onTestStart: result is NULL.");
+        }
+        currentTestGroupName = result.getTestContext().getCurrentXmlTest().getName();
+        currentClassName = result.getMethod().getRealClass().getName();
+        currentTestMethodName = result.getMethod().getMethodName();
+
+        if (testFailure && currentTestGroupName.equalsIgnoreCase(testGroupNameHavingTestFailure)) {
             result.setStatus(ITestResult.SKIP);
         } else {
             testFailure = false;
-            testName = "";
-            useCaseName = "";
+            testGroupNameHavingTestFailure = "";
+            testClassNameHavingTestFailure = "";
+            testMethodNameHavingTestFailure = "";
         }
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
+        if (result == null) {
+            ReportPortalLogger.logErrorMessage("SkipOnFailureListener: onTestStart: result is NULL.");
+        }
         testFailure = true;
-        useCaseName = result.getTestContext().getCurrentXmlTest().getName();
-        testName = result.getMethod().getRealClass().getSimpleName();
+        testGroupNameHavingTestFailure = result.getTestContext().getCurrentXmlTest().getName();
+        testClassNameHavingTestFailure = result.getMethod().getRealClass().getSimpleName();
+        testMethodNameHavingTestFailure = result.getMethod().getMethodName();
+        currentTestGroupName = testGroupNameHavingTestFailure;
+        currentClassName = testClassNameHavingTestFailure;
+        currentTestMethodName = testMethodNameHavingTestFailure;
+
+        String prefix = "Test has failed";
+        String message = String.format("\t" + prefix + messageTemplate,
+                                       currentTestGroupName, currentClassName, currentTestMethodName,
+                                       testGroupNameHavingTestFailure, testClassNameHavingTestFailure, testMethodNameHavingTestFailure, testFailure);
+        ReportPortalLogger.logInfoMessage(message);
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        // Do nothing
+        if (result == null) {
+            ReportPortalLogger.logErrorMessage("SkipOnFailureListener: onTestStart: result is NULL.");
+        }
+        currentTestGroupName = result.getTestContext().getCurrentXmlTest().getName();
+        currentClassName = result.getMethod().getRealClass().getName();
+        testMethodNameHavingTestFailure = result.getMethod().getMethodName();
     }
 
     @Override
     public void onTestSkipped(ITestResult result) {
-        String currentUseCaseName = result.getTestContext().getCurrentXmlTest().getName();
-        if (testFailure && currentUseCaseName.equalsIgnoreCase(useCaseName)) {
-            ReportPortalLogger.logDebugMessage("Test: '" + result.getMethod().getMethodName() + "' + SKIPPED because of earlier failure in usecase: '" + useCaseName + "':: Test: " + testName);
+        if (result == null) {
+            ReportPortalLogger.logErrorMessage("SkipOnFailureListener: onTestStart: result is NULL.");
+        }
+        currentTestGroupName = result.getTestContext().getCurrentXmlTest().getName();
+        currentClassName = result.getMethod().getRealClass().getName();
+        currentTestMethodName = result.getMethod().getMethodName();
+        if (testFailure && currentTestGroupName.equalsIgnoreCase(testGroupNameHavingTestFailure)) {
+            ReportPortalLogger.logErrorMessage("Test SKIPPED because of earlier failure in usecase");
             result.setStatus(ITestResult.SKIP);
-            System.out.println("Test " + currentUseCaseName + " SKIPPED because of earlier test failure");
-            ReportPortalLogger.logInfoMessage("Test " + currentUseCaseName + " SKIPPED because of earlier test failure");
-            ReportPortalLogger.logErrorMessage("Test SKIPPED because of earlier test failure");
         } else {
             testFailure = false;
-            testName = "";
-            useCaseName = "";
+            testClassNameHavingTestFailure = "";
+            testGroupNameHavingTestFailure = "";
+            testMethodNameHavingTestFailure = "";
         }
     }
 
